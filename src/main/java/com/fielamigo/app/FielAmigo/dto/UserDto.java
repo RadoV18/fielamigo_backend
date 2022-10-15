@@ -146,6 +146,11 @@ public class UserDto {
         this.longitude = longitude;
     }
 
-    
-
+    @Override
+    public String toString() {
+        return "UserDto [userId=" + userId + ", email=" + email + ", password=" + password + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber + ", birthDate=" + birthDate + ", address1="
+                + address1 + ", address2=" + address2 + ", zone=" + zone + ", status=" + status + ", latitude="
+                + latitude + ", longitude=" + longitude + "]";
+    }
 }

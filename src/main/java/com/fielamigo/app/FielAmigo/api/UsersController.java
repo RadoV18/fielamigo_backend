@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ public class UsersController {
     }
 
     @PostMapping("")
-    public UserDto createUser(UserDto user) {
+    public UserDto createUser(@RequestBody UserDto user) {
         System.out.println("Creating user...");
         return userBl.createUser(user);
     }
