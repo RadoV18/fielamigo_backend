@@ -1,0 +1,28 @@
+package com.fielamigo.app.FielAmigo.api;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fielamigo.app.FielAmigo.bl.UserBl;
+import com.fielamigo.app.FielAmigo.dto.UserDto;
+
+@RestController
+@CrossOrigin(origins = "*")
+@RequestMapping("/api/v1/users")
+public class UsersController {
+    private UserBl userBl;
+
+    @Autowired
+    public UsersController(UserBl userBl) {
+        this.userBl = userBl;
+    }
+
+    @PostMapping("")
+    public UserDto createUser(UserDto user) {
+        System.out.println("Creating user...");
+        return userBl.createUser(user);
+    }
+}

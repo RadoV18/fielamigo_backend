@@ -1,0 +1,201 @@
+openapi: 3.0.0
+info:
+  title: Fiel Amigo API
+  # description:
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:8080/api/v1
+  # description:
+
+# tags:
+#   - name: auth
+#     description: Authentication and security
+#   - name: sign up
+#     description: Signing up to the app.
+  
+paths:
+  /auth:
+    post:
+      summary: Log in to the app.
+      # description
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log-in'
+      responses:
+        '200':
+          description: A JsonWebToken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auth'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/email-verification-code:
+    post:
+      summary: Send the e-mail verification code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  example: 6584
+      responses:
+        '200':
+          description: The code was verified successfully.
+   
+  /users:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: The user was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: The user could not be created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /countries:
+    get:
+      description: Get all countries
+      responses:
+        '200':
+          description: A list of countries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+  /cities/{countryId}:
+    get:
+      description: Get all cities from a country
+      parameters:
+        - name: countryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of cities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/City'
+
+components:
+  schemas:
+    Auth:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        refreshToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    Log-in:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "mail@domain.com"
+        password:
+          type: string
+          example: "abc123def"
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "FA-0001"
+        errorDetail:
+          type: string
+          example: "Invalid credentials"
+    User:
+      type: object
+      required:      
+        - email
+        - password
+      properties:
+        id:
+          type: integer
+          example: 100
+        email:
+          type: string
+          example: "mail@domain.com"
+        password:
+          type: string
+          example: "abc123def"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        phoneNumber:
+          type: string
+          example: "+591 78913548"
+        birthDate:
+          type: string
+          example: "2000-01-01T00:00:00Z"
+        address1:
+          type: string
+          example: "Street 123"
+        address2:
+          type: string
+          example: "Apt. 456"
+        zone:
+          type: string
+          example: "Zone 2"
+        country:
+          type: string
+          example: "Bolivia"
+        city:
+          type: string
+          example: "La Paz"
+    Country:
+      type: object
+      properties:
+        countryId:
+          type: integer
+          example: 100
+        name:
+          type: string
+          example: "Bolivia"
+    City:
+      type: object
+      properties:
+        cityId:
+          type: integer
+          example: 100
+        name:
+          type: string
+          example: "La Paz"
+
