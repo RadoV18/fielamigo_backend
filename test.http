@@ -1,12 +1,22 @@
+
+
 POST http://localhost:8080/api/v1/users
 Content-Type: application/json
 
 {
-    "email": "test@domain.com",
-    "password": "test",
-    "firstName": "Test",
-    "lastName": "User",
-    "phoneNumber": "1234567890",
-    "birthDate": "2001-07-18T00:00:00+0000"
+  "email": "mail@domain.com",
+  "password": "abc123def",
+  "isOwner": "true"
+}
+
+###
+##
+##
+POST http://localhost:8080/api/v1/auth/verification-code
+Content-Type: application/json
+
+{
+    "cookie": "6345579b-34e8-4791-8ed2-6052fe7b6ed9",
+    "code": 7668
 }
   
