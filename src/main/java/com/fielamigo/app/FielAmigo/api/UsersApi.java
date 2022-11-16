@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fielamigo.app.FielAmigo.bl.AuthBl;
 import com.fielamigo.app.FielAmigo.bl.MailBl;
 import com.fielamigo.app.FielAmigo.bl.UserBl;
 import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
@@ -18,27 +19,50 @@ import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
 @RequestMapping("/api/v1/users")
 public class UsersApi {
     
+    private AuthBl authBl;
     private UserBl userBl;
     private MailBl mailBl;
 
-    public UsersApi(UserBl userBl, MailBl mailBl) {
+    public UsersApi(AuthBl authBl, UserBl userBl, MailBl mailBl) {
+        this.authBl = authBl;
         this.userBl = userBl;
         this.mailBl = mailBl;
     }
 
     /**
      * Endpoint to sign-up.
-     * @param userDto the request body.
+     * @param createUserDto the request body.
      * @return A cookie to verify the user later.
      */
     @PostMapping("")
-    public ResponseEntity<ResponseDto<MailVerificationDto>> createUser(@RequestBody CreateUserDto userDto) {
-        // TODO: validate userDto
+    public ResponseEntity<ResponseDto<MailVerificationDto>>
+        createUser(@RequestBody CreateUserDto createUserDto) {
+        // validate data
+        try {
+            createUserDto.validate();
+        } catch (FielAmigoException e) {
+            ResponseDto<MailVerificationDto> responseDto =
+                new ResponseDto<>(null, e.getMessage(), false);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+        // check if user already exists
+        if (userBl.userExists(createUserDto.getEmail())) {
+            ResponseDto<MailVerificationDto> responseDto =
+                new ResponseDto<>(null, "User already exists", false);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+        // check if the password is common
+        if (authBl.isCommonPassword(createUserDto.getPassword())) {
+            ResponseDto<MailVerificationDto> responseDto =
+                new ResponseDto<>(null, "Password is too common", false);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        }
+        // create user
         try {
             // Create a new user
-            userBl.createUser(userDto);
+            userBl.createUser(createUserDto);
             // Generate a verification code and send it to the user.
-            MailVerificationDto cookie = mailBl.addVerificationCode(userDto);
+            MailVerificationDto cookie = mailBl.addVerificationCode(createUserDto);
             // Return the cookie to the user.
             ResponseDto<MailVerificationDto> responseDto =
                 new ResponseDto<>(cookie, null, true);

@@ -39,4 +39,12 @@ public class UserBl {
         this.faUserDao.createUser(faUser);
     }
 
+    /**
+     * Checks if a user exists in the database.
+     * @param email the email of the user to be checked.
+     */
+    public boolean userExists(String email) {
+        return this.faUserDao.userExists(email) == 1;
+    }
+
 }

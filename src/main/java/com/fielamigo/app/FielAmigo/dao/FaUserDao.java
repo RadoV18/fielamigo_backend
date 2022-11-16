@@ -1,6 +1,7 @@
 package com.fielamigo.app.FielAmigo.dao;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 import com.fielamigo.app.FielAmigo.entity.FaUser;
@@ -15,4 +16,15 @@ public interface FaUserDao {
             (#{email}, #{secret}, #{catStatus}, #{status}, 'anonymous', 'localhost', NOW())
             """)
     void createUser(FaUser createUserDto);
+
+    @Select("""
+        SELECT
+            COUNT(*) AS COUNT
+        FROM
+            FA_USER
+        WHERE
+            EMAIL = #{email}
+        """
+    )
+    int userExists(String email);
 }

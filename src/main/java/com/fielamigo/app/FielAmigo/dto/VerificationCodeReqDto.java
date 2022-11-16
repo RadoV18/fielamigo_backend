@@ -1,5 +1,7 @@
 package com.fielamigo.app.FielAmigo.dto;
 
+import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
+
 public class VerificationCodeReqDto {
     private String cookie;
     private int code;
@@ -26,6 +28,15 @@ public class VerificationCodeReqDto {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public void validate() throws FielAmigoException {
+        if (cookie == null || cookie.isEmpty()) {
+            throw new FielAmigoException("Cookie is null or empty");
+        }
+        if (code < 1000 || code > 9999) {
+            throw new FielAmigoException("Code is not valid");
+        }
     }
 
     @Override

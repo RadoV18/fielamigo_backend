@@ -6,6 +6,8 @@ import java.util.UUID;
 import javax.mail.internet.MimeMessage;
 
 import com.fielamigo.app.FielAmigo.dto.VerificationCodeReqDto;
+import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -76,16 +78,19 @@ public class MailBl {
         mailSender.send(message);
     }
 
-    public boolean verifyCode(VerificationCodeReqDto mailVerificationDto) {
+    public boolean verifyCode(VerificationCodeReqDto mailVerificationDto)
+            throws FielAmigoException{
         String cookie = mailVerificationDto.getCookie();
-        int code = verificationCodes.get(mailVerificationDto.getCookie());
         if(verificationCodes.containsKey(cookie)) {
+            int code = verificationCodes.get(mailVerificationDto.getCookie());
             if(verificationCodes.get(cookie) == code) {
                 System.out.println("Code is valid");
                 return true;
+            } else {
+                return false;
             }
+        } else {
+            throw new FielAmigoException("Invalid cookie");
         }
-        System.out.println("Code is invalid");
-        return false;
     }
 }
