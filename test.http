@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "email": "mail@domain.com",
-  "password": "abc123def",
+  "password": "abc123def456",
   "isOwner": "true"
 }
 
@@ -14,6 +14,6 @@ POST http://localhost:8080/api/v1/auth/verification-code
 Content-Type: application/json
 
 {
-    "cookie": "6345579b-34e8-4791-8ed2-6052fe7b6ed9",
-    "code": 7668
+    "cookie": "c009bd2f-4ef7-41b5-b830-d869b99b260a",
+    "code": 3758
 }

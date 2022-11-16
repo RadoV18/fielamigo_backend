@@ -37,32 +37,18 @@ public class UsersApi {
     @PostMapping("")
     public ResponseEntity<ResponseDto<MailVerificationDto>>
         createUser(@RequestBody CreateUserDto createUserDto) {
-        // validate data
-        try {
-            createUserDto.validate();
-        } catch (FielAmigoException e) {
-            ResponseDto<MailVerificationDto> responseDto =
-                new ResponseDto<>(null, e.getMessage(), false);
-            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
-        }
-        // check if user already exists
-        if (userBl.userExists(createUserDto.getEmail())) {
-            ResponseDto<MailVerificationDto> responseDto =
-                new ResponseDto<>(null, "User already exists", false);
-            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
-        }
-        // check if the password is common
-        if (authBl.isCommonPassword(createUserDto.getPassword())) {
-            ResponseDto<MailVerificationDto> responseDto =
-                new ResponseDto<>(null, "Password is too common", false);
-            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
-        }
+
         // create user
         try {
+            // validate data
+            createUserDto.validate();
+            userBl.userExists(createUserDto.getEmail());
+            authBl.isCommonPassword(createUserDto.getPassword());
+
             // Create a new user
-            userBl.createUser(createUserDto);
+            int userId = userBl.createUser(createUserDto);
             // Generate a verification code and send it to the user.
-            MailVerificationDto cookie = mailBl.addVerificationCode(createUserDto);
+            MailVerificationDto cookie = mailBl.addVerificationCode(createUserDto, userId);
             // Return the cookie to the user.
             ResponseDto<MailVerificationDto> responseDto =
                 new ResponseDto<>(cookie, null, true);

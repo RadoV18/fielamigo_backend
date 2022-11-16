@@ -14,16 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fielamigo.app.FielAmigo.bl.MailBl;
+import com.fielamigo.app.FielAmigo.bl.UserBl;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthApi {
     
     private MailBl mailBl;
+    private UserBl userBl;
 
     @Autowired
-    public AuthApi(MailBl mailBl) {
+    public AuthApi(MailBl mailBl, UserBl userBl) {
         this.mailBl = mailBl;
+        this.userBl = userBl;
     }
 
     /**
@@ -34,20 +37,29 @@ public class AuthApi {
     @PostMapping("/verification-code")
     public ResponseEntity<ResponseDto<VerificationCodeResDto>>
         verifyCode(@RequestBody VerificationCodeReqDto verificationCodeReqDto) {
-        // validate data
+
         try {
+            // validate data
             verificationCodeReqDto.validate();
 
-            // verify code
-            boolean isCodeValid = mailBl.verifyCode(verificationCodeReqDto);
-            if(isCodeValid) {
+            // verify if the code is correct and get the user's id
+            int userId = mailBl.verifyCode(verificationCodeReqDto);
+
+            if(userId != -1) {
+                // update user's status to active
+                userBl.setToActiveWithIncompleteData(userId);
+
+                // return OK
                 VerificationCodeResDto verificationCodeResDto = new VerificationCodeResDto("OK");
                 ResponseDto<VerificationCodeResDto> responseDto =
                     new ResponseDto<>(verificationCodeResDto, null, true);
                 
                 return new ResponseEntity<>(responseDto, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+                // the code is incorrect
+                ResponseDto<VerificationCodeResDto> responseDto =
+                    new ResponseDto<>(null, "The code is incorrect", false);
+                return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
             }
         } catch (FielAmigoException e) {
             ResponseDto<VerificationCodeResDto> responseDto =

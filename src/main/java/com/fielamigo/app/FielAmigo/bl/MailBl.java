@@ -7,6 +7,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.fielamigo.app.FielAmigo.dto.VerificationCodeReqDto;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
+import com.fielamigo.app.FielAmigo.utils.Pair;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,8 +18,8 @@ import com.fielamigo.app.FielAmigo.dto.MailVerificationDto;
 
 @Service
 public class MailBl {
-    private static final HashMap<String, Integer> verificationCodes =
-        new HashMap<String, Integer>();
+    private static final HashMap<String, Pair<Integer, Integer>> verificationCodes =
+        new HashMap<String, Pair<Integer, Integer>>();
 
     private final JavaMailSender mailSender;
 
@@ -29,19 +30,21 @@ public class MailBl {
     /**
      * Sends a verification code to the user and stores it in a HashMap, so it
      * can be verified later.
-     * @param user 
+     * @param user the user to send the verification code to.
+     * @param userId the user's id.
      * @return
      */
-    public MailVerificationDto addVerificationCode(CreateUserDto user) {
+    public MailVerificationDto addVerificationCode(CreateUserDto user, int userId) {
         // Generate random UUID to be used as a cookie.
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
 
         // Generate random verification code.
         int code = (int) (Math.random() * 9000) + 1000;
-        
+        Pair<Integer, Integer> pair = new Pair<Integer, Integer>(userId, code);
+
         // Store the verification code in the HashMap.
-        verificationCodes.put(randomUUIDString, code);
+        verificationCodes.put(randomUUIDString, pair);
 
         // Send the verification code to the user asynchronously.
         Thread mailThread = new Thread(() -> {
@@ -78,16 +81,26 @@ public class MailBl {
         mailSender.send(message);
     }
 
-    public boolean verifyCode(VerificationCodeReqDto mailVerificationDto)
+    /**
+     * Verifies the user's verification code.
+     * @param mailVerificationDto the user's cookie and verification code.
+     * @return the user's id if the code is correct, -1 if the code is incorrect
+     * @throws FielAmigoException if the cookie is not in the HashMap.
+     */
+    public int verifyCode(VerificationCodeReqDto mailVerificationDto)
             throws FielAmigoException{
+        // Cookie sent by the user.
         String cookie = mailVerificationDto.getCookie();
+        int code = mailVerificationDto.getCode();
+
+        // Check if the cookie is valid and get the user's id.
         if(verificationCodes.containsKey(cookie)) {
-            int code = verificationCodes.get(mailVerificationDto.getCookie());
-            if(verificationCodes.get(cookie) == code) {
-                System.out.println("Code is valid");
-                return true;
+            Pair<Integer, Integer> data = verificationCodes.get(cookie);
+            if(data.getSecond() == code) {
+                // return the user's id to update the user's status.
+                return data.getFirst();
             } else {
-                return false;
+                return -1;
             }
         } else {
             throw new FielAmigoException("Invalid cookie");
