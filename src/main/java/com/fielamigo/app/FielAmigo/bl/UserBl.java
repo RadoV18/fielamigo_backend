@@ -29,8 +29,9 @@ public class UserBl {
         // Encrypt password with BCrypt
         String secret = BCrypt
             .withDefaults()
-            .hashToString(15, createUserDto.getPassword().toCharArray());
+            .hashToString(12, createUserDto.getPassword().toCharArray());
         faUser.setSecret(secret);
+        System.out.println("secret: " + secret);
 
         // default values for status and cat_status
         faUser.setCatStatus(3);

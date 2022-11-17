@@ -38,4 +38,29 @@ public interface FaUserDao {
         """
     )
     int userExists(String email);
+
+    @Select("""
+        SELECT
+            SECRET
+        FROM
+            FA_USER
+        WHERE
+            EMAIL = #{email}
+            AND STATUS = 1
+            AND CAT_STATUS IN (1, 2)
+            """)
+    String findSecretByEmail(String email);
+
+    @Select("""
+        SELECT
+            USER_ID
+        FROM
+            FA_USER
+        WHERE
+            EMAIL = #{email}
+            AND STATUS = 1
+            AND CAT_STATUS IN (1, 2)
+            """)
+    int findIdByEmail(String email);
+
 }

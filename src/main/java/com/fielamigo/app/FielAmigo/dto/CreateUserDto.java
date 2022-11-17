@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.dto;
 import java.util.regex.Pattern;
 
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
+import com.fielamigo.app.FielAmigo.utils.Validation;
 
 public class CreateUserDto {
     private String email;
@@ -43,22 +44,9 @@ public class CreateUserDto {
     }
 
     public void validate() throws FielAmigoException {
-        if (email == null || email.isEmpty()) {
-            throw new FielAmigoException("Email is null or empty");
-        }
-        // check email with regex
-        // OWASP email regex
-        String regexPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        boolean isEmailValid = Pattern.compile(regexPattern)
-            .matcher(email)
-            .matches();
-        if (!isEmailValid) {
-            throw new FielAmigoException("Email is not valid");
-        }
-
-        if (password == null || password.isEmpty()) {
-            throw new FielAmigoException("Password is null or empty");
-        }
+        Validation.isEmailValid(email);
+        Validation.isPasswordValid(password);
+        
         // regex for minimum length of 12 characters
         String regexPasswordPattern = "^(?=.{12,}$).*$";
         boolean isPasswordValid = Pattern.compile(regexPasswordPattern)

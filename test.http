@@ -2,7 +2,7 @@ POST http://localhost:8080/api/v1/users
 Content-Type: application/json
 
 {
-  "email": "mail@domain.com",
+  "email": "mail6@domain.com",
   "password": "abc123def456",
   "isOwner": "true"
 }
@@ -14,6 +14,16 @@ POST http://localhost:8080/api/v1/auth/verification-code
 Content-Type: application/json
 
 {
-    "cookie": "c009bd2f-4ef7-41b5-b830-d869b99b260a",
-    "code": 3758
+    "cookie": "a35e3588-6ab7-4115-8ee9-fdb533acc2f2",
+    "code": 9805
+}
+
+###
+
+POST http://localhost:8080/api/v1/auth
+Content-Type: application/json
+
+{
+  "email": "mail5@domain.com",
+  "password": "abc123def456"
 }

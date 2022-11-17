@@ -1,5 +1,8 @@
 package com.fielamigo.app.FielAmigo.dto;
 
+import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
+import com.fielamigo.app.FielAmigo.utils.Validation;
+
 public class AuthReqDto {
     private String email;
     private String password;
@@ -26,6 +29,11 @@ public class AuthReqDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void validate() throws FielAmigoException {
+        Validation.isEmailValid(email);
+        Validation.isPasswordValid(password);
     }
 
     @Override
