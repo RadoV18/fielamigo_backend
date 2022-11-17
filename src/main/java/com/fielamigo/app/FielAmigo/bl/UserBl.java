@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.bl;
 import org.springframework.stereotype.Service;
 
 import com.fielamigo.app.FielAmigo.dao.FaUserDao;
+import com.fielamigo.app.FielAmigo.dao.FaUserGroupDao;
 import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
 import com.fielamigo.app.FielAmigo.entity.FaUser;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
@@ -13,9 +14,11 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public class UserBl {
 
     private FaUserDao faUserDao;
+    private FaUserGroupDao faUserGroupDao;
     
-    public UserBl(FaUserDao faUserDao) {
+    public UserBl(FaUserDao faUserDao, FaUserGroupDao faUserGroupDao) {
         this.faUserDao = faUserDao;
+        this.faUserGroupDao = faUserGroupDao;
     }
 
     /**
@@ -31,14 +34,20 @@ public class UserBl {
             .withDefaults()
             .hashToString(12, createUserDto.getPassword().toCharArray());
         faUser.setSecret(secret);
-        System.out.println("secret: " + secret);
 
         // default values for status and cat_status
         faUser.setCatStatus(3);
         faUser.setStatus(1);
 
         // store user in database
-        return this.faUserDao.createUser(faUser);
+        int userId = faUserDao.createUser(faUser);
+        // add user to the selected group
+        if(createUserDto.isOwner()) {
+            faUserGroupDao.addUserToGroup(userId, 1);
+        } else {
+            faUserGroupDao.addUserToGroup(userId, 2);
+        }
+        return userId;
     }
 
     /**

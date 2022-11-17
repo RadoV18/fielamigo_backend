@@ -37,14 +37,13 @@ public class UsersApi {
     @PostMapping("")
     public ResponseEntity<ResponseDto<MailVerificationDto>>
         createUser(@RequestBody CreateUserDto createUserDto) {
-
         // create user
         try {
             // validate data
             createUserDto.validate();
             userBl.userExists(createUserDto.getEmail());
             authBl.isCommonPassword(createUserDto.getPassword());
-
+            
             // Create a new user
             int userId = userBl.createUser(createUserDto);
             // Generate a verification code and send it to the user.
@@ -60,4 +59,12 @@ public class UsersApi {
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         }
     }
+
+    /**
+     * Endpoint to add user details.
+     */
+
+    /**
+     * Endpoint to add address details.
+     */
 }

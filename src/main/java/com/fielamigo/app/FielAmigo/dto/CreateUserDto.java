@@ -39,7 +39,7 @@ public class CreateUserDto {
         return isOwner;
     }
 
-    public void setOwner(boolean owner) {
+    public void setIsOwner(boolean owner) {
         isOwner = owner;
     }
 

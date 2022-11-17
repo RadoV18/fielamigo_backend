@@ -30,12 +30,18 @@ public class AuthBl {
         this.faUserDetailsDao = faUserDetailsDao;
     }
 
+    /**
+     * Method to authenticate a user.
+     * @param credentials the user's email and password.
+     * @return the token and refresh token.
+     * @throws FielAmigoException if the user is not found or the password is incorrect.
+     */
     public AuthResDto authenticate(AuthReqDto credentials) throws FielAmigoException{
         AuthResDto result = new AuthResDto();
 
         // get the user's hashed password from the database
         String currentHashedPassword = faUserDao.findSecretByEmail(credentials.getEmail());
-        
+
         // check if the password was found
         if(currentHashedPassword != null) {
             // check if the password is correct
