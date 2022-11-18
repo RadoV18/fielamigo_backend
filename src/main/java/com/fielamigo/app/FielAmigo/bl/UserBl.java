@@ -2,10 +2,13 @@ package com.fielamigo.app.FielAmigo.bl;
 
 import org.springframework.stereotype.Service;
 
+import com.fielamigo.app.FielAmigo.dao.FaUserAddressDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserGroupDao;
 import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
+import com.fielamigo.app.FielAmigo.dto.UserAddressReqDto;
 import com.fielamigo.app.FielAmigo.entity.FaUser;
+import com.fielamigo.app.FielAmigo.entity.FaUserAddress;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -14,10 +17,12 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public class UserBl {
 
     private FaUserDao faUserDao;
+    private FaUserAddressDao faUserAddressDao;
     private FaUserGroupDao faUserGroupDao;
     
-    public UserBl(FaUserDao faUserDao, FaUserGroupDao faUserGroupDao) {
+    public UserBl(FaUserDao faUserDao, FaUserAddressDao faUserAddressDao, FaUserGroupDao faUserGroupDao) {
         this.faUserDao = faUserDao;
+        this.faUserAddressDao = faUserAddressDao;
         this.faUserGroupDao = faUserGroupDao;
     }
 
@@ -67,6 +72,22 @@ public class UserBl {
         if(this.faUserDao.userExists(email) == 1) {
             throw new FielAmigoException("User already exists");
         }
+    }
+    /**
+     * Method to add a new address to a user.
+     * @param userId the user id.
+     * @param address the address to be added.
+     */
+    public void addAddress(int userId, UserAddressReqDto address) {
+        FaUserAddress faUserAddress = new FaUserAddress();
+        faUserAddress.setUserId(userId);
+        faUserAddress.setAddress1(address.getAddress1());
+        faUserAddress.setAddress2(address.getAddress2());
+        faUserAddress.setCatCityId(address.getCityId());
+        faUserAddress.setCatCountryId(address.getCountryId());
+        faUserAddress.setZone(address.getZone());
+        
+        this.faUserAddressDao.addAddress(faUserAddress);
     }
 
 }
