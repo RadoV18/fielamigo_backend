@@ -5,6 +5,7 @@ import java.util.List;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 
 public class AuthUtil {
     
@@ -30,14 +31,21 @@ public class AuthUtil {
     }
 
     public static void verifyHasRole(String jwt, String role) throws UnauthorizedException{
-        List<String> roles = JWT.require(Algorithm.HMAC256(JwtUtil.JWT_SECRET))
+        try {
+            List<String> roles = JWT.require(Algorithm.HMAC256(JwtUtil.JWT_SECRET))
             .build()
             .verify(jwt)
             .getClaim("roles")
             .asList(String.class);
-        
-        if(!roles.contains(role)) {
-            throw new UnauthorizedException("User does not have the required role");
+                
+            if(!roles.contains(role)) {
+                throw new UnauthorizedException("User does not have the required role");
+            }
+        } catch (TokenExpiredException e) {
+            throw new UnauthorizedException("Token has expired");
+        } catch (JWTVerificationException e) {
+            throw new UnauthorizedException("Error verifying token");
         }
     }
+
 }
