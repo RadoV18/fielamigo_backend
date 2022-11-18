@@ -12,13 +12,13 @@ public interface DogUserDao {
     
     @Select("""
         SELECT
-            D.DOG_ID,
+            D.DOG_ID AS dogId,
             D.USER_ID,
             D.NAME,
             D.IS_MALE,
             D.BIRTH_DATE,
             CS.NAME AS SIZE,
-            CB.NAME AS BREED
+            CB.NAME AS BREED,
             IM.URL AS IMAGE_URL
         FROM FA_DOG D
         INNER JOIN FA_USER USR

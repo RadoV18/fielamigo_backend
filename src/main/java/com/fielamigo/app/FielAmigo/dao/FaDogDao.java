@@ -16,6 +16,7 @@ public interface FaDogDao {
             #{userId}, #{name}, #{isMale}, #{birthDate}, #{catSize}, #{catBreed}, #{isSterilized},
             #{notes}, 1, 'anonymous', 'localhost', NOW()
         )
+        RETURNING DOG_ID
             """)
-    public void addDog(FaDog dog);
+    public int addDog(FaDog dog);
 }

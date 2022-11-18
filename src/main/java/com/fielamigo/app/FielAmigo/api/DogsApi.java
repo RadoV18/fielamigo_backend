@@ -7,10 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fielamigo.app.FielAmigo.bl.DogBl;
 import com.fielamigo.app.FielAmigo.dto.DogDto;
@@ -74,7 +75,9 @@ public class DogsApi {
      */
     @PostMapping
     public ResponseEntity<ResponseDto<DogUser>> addDog(
-        @RequestHeader Map<String, String> headers, @RequestBody DogDto dogDto) {
+        @RequestHeader Map<String, String> headers,
+        @RequestPart DogDto data,
+        @RequestPart MultipartFile image) {
         ResponseDto<DogUser> responseDto =
             new ResponseDto<>(null, null, false);
 
@@ -88,12 +91,12 @@ public class DogsApi {
             // get the user id from the token
             int userId = JwtUtil.getUserIdFromToken(jwt);
             // check if the userId of the token is the same as the userId in the request body
-            if (userId != dogDto.getUserId()) {
+            if (userId != data.getUserId()) {
                 throw new FielAmigoException("The userId in the token is not the same as the userId in the request body");
             }
 
             // create the dog
-            dogBl.addDog(dogDto);
+            dogBl.addDog(data, image);
 
             responseDto.setSuccessful(true);
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
