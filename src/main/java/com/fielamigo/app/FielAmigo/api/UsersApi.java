@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fielamigo.app.FielAmigo.bl.AuthBl;
 import com.fielamigo.app.FielAmigo.bl.MailBl;
@@ -17,6 +19,7 @@ import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
 import com.fielamigo.app.FielAmigo.dto.MailVerificationDto;
 import com.fielamigo.app.FielAmigo.dto.ResponseDto;
 import com.fielamigo.app.FielAmigo.dto.UserAddressReqDto;
+import com.fielamigo.app.FielAmigo.dto.UserDetailsReqDto;
 import com.fielamigo.app.FielAmigo.utils.AuthUtil;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
 import com.fielamigo.app.FielAmigo.utils.JwtUtil;
@@ -69,10 +72,44 @@ public class UsersApi {
 
     /**
      * Endpoint to add user details.
+     * @param userDetailsReqDto the request body.
+     * @param headers the request headers.
+     * @param image the user's profile picture.
      */
+    @PostMapping("/details")
+    public ResponseEntity<ResponseDto<Void>> addUserDetails(
+        @RequestHeader Map<String, String> headers,
+        @RequestPart MultipartFile image,
+        @RequestPart UserDetailsReqDto data
+    ) {
+        ResponseDto<Void> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // TODO: validate the data
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "ADD_PAYMENT_METHOD");
+            // get the user id from the token
+            int userId = JwtUtil.getUserIdFromToken(jwt);
+
+            // add the user details
+            userBl.addUserDetails(userId, data, image);
+
+            responseDto.setSuccessful(true);
+            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     /**
      * Endpoint to add address details.
+     * @param userAddressReqDto the request body.
+     * @param headers the request headers.
      */
     @PostMapping("/address")
     public ResponseEntity<ResponseDto<UserAddressReqDto>> addAddress(
@@ -96,7 +133,7 @@ public class UsersApi {
             responseDto.setSuccessful(true);
             responseDto.setMessage("Address added successfully");
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-            
+
         } catch (FielAmigoException e) {
             responseDto.setMessage(e.getMessage());
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

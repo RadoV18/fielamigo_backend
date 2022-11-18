@@ -1,14 +1,22 @@
 package com.fielamigo.app.FielAmigo.bl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fielamigo.app.FielAmigo.dao.FaImageDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserAddressDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserDao;
+import com.fielamigo.app.FielAmigo.dao.FaUserDetailsDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserGroupDao;
+import com.fielamigo.app.FielAmigo.dao.FaUserImageDao;
 import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
 import com.fielamigo.app.FielAmigo.dto.UserAddressReqDto;
+import com.fielamigo.app.FielAmigo.dto.UserDetailsReqDto;
 import com.fielamigo.app.FielAmigo.entity.FaUser;
 import com.fielamigo.app.FielAmigo.entity.FaUserAddress;
+import com.fielamigo.app.FielAmigo.entity.FaUserDetails;
+import com.fielamigo.app.FielAmigo.entity.FaUserImage;
+import com.fielamigo.app.FielAmigo.service.S3FileStorageService;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -16,14 +24,25 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 @Service
 public class UserBl {
 
+    private FaImageDao faImageDao;
     private FaUserDao faUserDao;
     private FaUserAddressDao faUserAddressDao;
+    private FaUserDetailsDao faUserDetailsDao;
     private FaUserGroupDao faUserGroupDao;
+    private FaUserImageDao faUserImageDao;
+    private S3FileStorageService s3FileStorageService;
     
-    public UserBl(FaUserDao faUserDao, FaUserAddressDao faUserAddressDao, FaUserGroupDao faUserGroupDao) {
+    public UserBl(FaImageDao faImageDao, FaUserDao faUserDao, FaUserAddressDao faUserAddressDao,
+        FaUserDetailsDao faUserDetailsDao, FaUserGroupDao faUserGroupDao, FaUserImageDao faUserImageDao,
+        S3FileStorageService s3FileStorageService
+    ) {
+        this.faImageDao = faImageDao;
         this.faUserDao = faUserDao;
         this.faUserAddressDao = faUserAddressDao;
+        this.faUserDetailsDao = faUserDetailsDao;
+        this.faUserImageDao = faUserImageDao;
         this.faUserGroupDao = faUserGroupDao;
+        this.s3FileStorageService = s3FileStorageService;
     }
 
     /**
@@ -88,6 +107,31 @@ public class UserBl {
         faUserAddress.setZone(address.getZone());
         
         this.faUserAddressDao.addAddress(faUserAddress);
+    }
+
+    public void addUserDetails(int userId, UserDetailsReqDto userDetails, MultipartFile image) {
+        // add user details to database
+        System.out.println(userDetails);
+        FaUserDetails faUserDetails = new FaUserDetails();
+        faUserDetails.setUserId(userId);
+        faUserDetails.setFirstName(userDetails.getFirstName());
+        faUserDetails.setLastName(userDetails.getLastName());
+        faUserDetails.setPhoneNumber(userDetails.getPhoneNumber());
+        faUserDetails.setBirthDate(userDetails.getBirthDate());
+
+        this.faUserDetailsDao.addUserDetails(faUserDetails);
+
+        // add image to s3
+        String url = this.s3FileStorageService.upload(image);
+
+        // add user image to database
+        int imageId = this.faImageDao.addImage(url);
+
+        // add imageid to user
+        FaUserImage faUserImage = new FaUserImage();
+        faUserImage.setUserId(userId);
+        faUserImage.setImageId(imageId);
+        this.faUserImageDao.addUserImage(faUserImage);
     }
 
 }

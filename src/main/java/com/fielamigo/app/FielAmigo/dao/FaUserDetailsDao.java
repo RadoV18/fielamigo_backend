@@ -1,5 +1,6 @@
 package com.fielamigo.app.FielAmigo.dao;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 
 import com.fielamigo.app.FielAmigo.entity.FaUserDetails;
@@ -18,5 +19,18 @@ public interface FaUserDetailsDao {
             AND USR.CAT_STATUS = 1
             AND USR_DET.STATUS = 1
             """)
-    FaUserDetails findUserDetailsByEmail(String email);
+    public FaUserDetails findUserDetailsByEmail(String email);
+
+    @Insert("""
+        INSERT INTO FA_USER_DETAILS
+            (
+                USER_ID, FIRST_NAME, LAST_NAME, PHONE_NUMBER, BIRTH_DATE, STATUS,
+                TX_HOST, TX_USER, TX_DATE
+            )
+        VALUES (
+            #{userId}, #{firstName}, #{lastName}, #{phoneNumber}, #{birthDate}, 1,
+            'localhost', 'admin', NOW()
+        )
+            """)
+    public void addUserDetails(FaUserDetails faUserDetails);
 }
