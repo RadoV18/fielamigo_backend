@@ -74,10 +74,18 @@ public class DogsApi {
      * Endpoint to get a caregiver's list of dogs by a caregiverId.
      */
     @GetMapping("/caregiver/{caregiverId}")
-    public ResponseEntity<ResponseDto<List<DogUserDto>>> getDogsByCaregiverId(@PathVariable("caregiverId") Integer caregiverId) {
+    public ResponseEntity<ResponseDto<List<DogUserDto>>> getDogsByCaregiverId(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable("caregiverId") Integer caregiverId
+    ) {
         ResponseDto<List<DogUserDto>> responseDto = new ResponseDto<>(null, null, false);
 
         try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "GET_DOGS");
+
             // get the caregiver's dogs
             List<DogUserDto> dogs = dogBl.getDogsByCaregiverId(caregiverId);
 
@@ -89,6 +97,10 @@ public class DogsApi {
             responseDto.setMessage(e.getMessage());
             responseDto.setSuccessful(false);
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            responseDto.setSuccessful(false);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
         }
     }
     
