@@ -56,7 +56,6 @@ public class ReviewsApi {
             // get the reviews
             PaginatedDto<List<ReviewResDto>> reviews =
                 reviewBl.getPaginatedReviewsByCaregiverId(caregiverId, limit, offset);
-            
 
             responseDto.setData(reviews);
             responseDto.setSuccessful(true);
