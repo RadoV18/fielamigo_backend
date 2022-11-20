@@ -18,6 +18,7 @@ import com.fielamigo.app.FielAmigo.bl.CaregiverBl;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBoardingReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
+import com.fielamigo.app.FielAmigo.dto.CaregiverBookedDateDto;
 import com.fielamigo.app.FielAmigo.dto.ResponseDto;
 import com.fielamigo.app.FielAmigo.utils.AuthUtil;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
@@ -232,10 +233,43 @@ public class CaregiversApi {
 
     /**
      * Endpoint to get all the dates that a caregiver is not available to board a pet.
+     * @param caregiverId the caregiver's id.
+     * @param headers the request headers.
+     * @param month the month to get the dates.
+     * @param year the year to get the dates.
+     * @return a list of dates.
      */
+    @GetMapping("/{caregiverId}/boarding/booked-dates")
+    public ResponseEntity<ResponseDto<CaregiverBookedDateDto>> getCaregiverUnavailableDates(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable Integer caregiverId,
+        @RequestParam Integer month,
+        @RequestParam Integer year
+    ) {
+        ResponseDto<CaregiverBookedDateDto> responseDto = new ResponseDto<>(null, null, false);
 
-    /**
-     * Endpoint to get the reviews of a caregiver by a caregiverId.
-     */
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "GET_PROFILE");
+
+            // get the caregiver's unavailable dates
+            CaregiverBookedDateDto unavailableDates =
+                caregiverBl.getCaregiverUnavailableDates(caregiverId, year, month);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(unavailableDates);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 }

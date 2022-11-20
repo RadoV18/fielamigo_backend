@@ -20,4 +20,17 @@ public interface FaBoardingServiceDao {
             AND CRG.STATUS = 1
             """)
     public CaregiverServiceDto getService(int caregiverId);
+
+    @Select("""
+        SELECT
+            BRD.MAX_DOGS
+        FROM FA_BOARDING_SERVICE BRD
+        INNER JOIN FA_CAREGIVER CRG
+            ON BRD.CAREGIVER_ID = CRG.CAREGIVER_ID
+        WHERE
+            BRD.CAREGIVER_ID = #{caregiverId}
+            AND BRD.STATUS = 1
+            AND CRG.STATUS = 1
+            """)
+    public Integer getMaxDogs(int caregiverId);
 }
