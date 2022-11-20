@@ -85,7 +85,38 @@ public class CaregiversApi {
 
     /**
      * Endpoint to get a caregiver's bio by a caregiverId.
+     * @param caregiverId the caregiver's id.
+     * @return the caregiver's bio.
      */
+    @GetMapping("/{caregiverId}/bio")
+    public ResponseEntity<ResponseDto<String>> getCaregiverBio(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable("caregiverId") Integer caregiverId
+    ) {
+        ResponseDto<String> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "SEARCH_BOARDING");
+            
+            // get the caregiver's bio
+            String bio = caregiverBl.getCaregiverBioById(caregiverId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(bio);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     /**
      *  Endpoint to get a caregiver's list of picture by a caregiverId.

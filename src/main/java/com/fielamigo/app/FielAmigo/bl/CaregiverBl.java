@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.fielamigo.app.FielAmigo.dao.CaregiverCardDao;
 import com.fielamigo.app.FielAmigo.dao.FaBoardingServiceDao;
+import com.fielamigo.app.FielAmigo.dao.FaCaregiverDao;
 import com.fielamigo.app.FielAmigo.dao.FaNursingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaTrainingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaWalkingServiceDao;
@@ -21,16 +22,18 @@ public class CaregiverBl {
     private FaTrainingServiceDao faTrainingServiceDao;
     private FaWalkingServiceDao faWalkingServiceDao;
     private FaNursingServiceDao faNursingServiceDao;
+    private FaCaregiverDao faCaregiverDao;
     
     public CaregiverBl(CaregiverCardDao caregiverCardDao, FaBoardingServiceDao faBoardingServiceDao,
         FaTrainingServiceDao faTrainingServiceDao, FaWalkingServiceDao faWalkingServiceDao,
-        FaNursingServiceDao faNursingServiceDao
+        FaNursingServiceDao faNursingServiceDao, FaCaregiverDao faCaregiverDao
     ) {
         this.caregiverCardDao = caregiverCardDao;
         this.faBoardingServiceDao = faBoardingServiceDao;
         this.faTrainingServiceDao = faTrainingServiceDao;
         this.faWalkingServiceDao = faWalkingServiceDao;
         this.faNursingServiceDao = faNursingServiceDao;
+        this.faCaregiverDao = faCaregiverDao;
     }
 
     /**
@@ -77,5 +80,13 @@ public class CaregiverBl {
         }
 
         return services;
+    }
+
+    /**
+     * Method that returns the bio of a caregiver
+     * @param caregiverId the id of the caregiver
+     */
+    public String getCaregiverBioById(int caregiverId) {
+        return this.faCaregiverDao.getCaregiverBio(caregiverId);
     }
 }
