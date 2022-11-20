@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.service;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,16 +14,21 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
 
 @Service
-public class S3FileStorageService {
+public class S3FileStorageServiceImpl implements FileStorageService {
 
-    private final AmazonS3 amazonS3;
+    @Autowired
+    private AmazonS3 amazonS3;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    public S3FileStorageService(AmazonS3 amazonS3) {
+    public S3FileStorageServiceImpl() {
+    }
+
+    public S3FileStorageServiceImpl(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
     }
+
     /**
      * Method that uploads a file to S3
      * @param file the file to upload
