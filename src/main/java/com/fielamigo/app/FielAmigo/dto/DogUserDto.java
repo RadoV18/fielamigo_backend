@@ -1,8 +1,8 @@
-package com.fielamigo.app.FielAmigo.entity;
+package com.fielamigo.app.FielAmigo.dto;
 
 import java.util.Date;
 
-public class DogUser {
+public class DogUserDto {
     private Integer dogId;
     private Integer userId;
     private String name;
@@ -11,10 +11,10 @@ public class DogUser {
     private String breed;
     private String imageUrl;
 
-    public DogUser() {
+    public DogUserDto() {
     }
 
-    public DogUser(Integer dogId, Integer userId, String name, Date birthDate, String size,
+    public DogUserDto(Integer dogId, Integer userId, String name, Date birthDate, String size,
             String breed, String imageUrl) {
         this.dogId = dogId;
         this.userId = userId;

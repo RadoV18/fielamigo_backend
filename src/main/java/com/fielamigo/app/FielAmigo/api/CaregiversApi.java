@@ -90,10 +90,6 @@ public class CaregiversApi {
      */
 
     /**
-     * Endpoint to get a caregiver's list of pets by a caregiverId.
-     */
-
-    /**
      * Endpoint to get a caregiver's list of experience details by a caregiverId.
      */
 

@@ -10,7 +10,7 @@ import com.fielamigo.app.FielAmigo.dao.FaDogDao;
 import com.fielamigo.app.FielAmigo.dao.FaDogImageDao;
 import com.fielamigo.app.FielAmigo.dao.FaImageDao;
 import com.fielamigo.app.FielAmigo.dto.DogDto;
-import com.fielamigo.app.FielAmigo.entity.DogUser;
+import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 import com.fielamigo.app.FielAmigo.entity.FaDog;
 import com.fielamigo.app.FielAmigo.service.S3FileStorageService;
 
@@ -38,9 +38,18 @@ public class DogBl {
      * @param userId the id of the user
      * @return
      */
-    public List<DogUser> getDogs(int userId) {
+    public List<DogUserDto> getDogs(int userId) {
         return dogUserDao.getDogs(userId);
         
+    }
+
+    /**
+     * Get all the caregiver's dogs by a caregiverId.
+     * @param caregiverId the id of the caregiver
+     * @return a list of DogUserDto objects
+     */
+    public List<DogUserDto> getDogsByCaregiverId(int caregiverId) {
+        return dogUserDao.getDogsByCaregiverId(caregiverId);
     }
 
     /**
