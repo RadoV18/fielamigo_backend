@@ -1,21 +1,23 @@
 package com.fielamigo.app.FielAmigo.dto;
 
 public class CaregiverCardDto {
-    String firstName;
-    String lastName;
-    String imageUrl;
-    String zone;
-    String city;
-    Integer reviewCount;
-    Double rating;
-    Double price;
-    boolean isVerified;
+    private Integer caregiverId;
+    private String firstName;
+    private String lastName;
+    private String imageUrl;
+    private String zone;
+    private String city;
+    private Integer reviewCount;
+    private Double rating;
+    private Double price;
+    private boolean isVerified;
 
     public CaregiverCardDto() {
     }
 
-    public CaregiverCardDto(String firstName, String lastName, String imageUrl, String zone, String city,
+    public CaregiverCardDto(Integer caregiverId, String firstName, String lastName, String imageUrl, String zone, String city,
             Integer reviewCount, Double rating, Double price, boolean isVerified) {
+        this.caregiverId = caregiverId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.imageUrl = imageUrl;
@@ -25,6 +27,14 @@ public class CaregiverCardDto {
         this.rating = rating;
         this.price = price;
         this.isVerified = isVerified;
+    }
+
+    public Integer getCaregiverId() {
+        return caregiverId;
+    }
+
+    public void setCaregiverId(Integer caregiverId) {
+        this.caregiverId = caregiverId;
     }
 
     public String getFirstName() {
@@ -101,9 +111,9 @@ public class CaregiverCardDto {
 
     @Override
     public String toString() {
-        return "CaregiverCardDto [firstName=" + firstName + ", lastName=" + lastName + ", imageUrl=" + imageUrl
-                + ", zone=" + zone + ", city=" + city + ", reviewCount=" + reviewCount + ", rating=" + rating
-                + ", price=" + price + ", isVerified=" + isVerified + "]";
+        return "CaregiverCardDto [caregiverId=" + caregiverId + ", firstName=" + firstName + ", lastName=" + lastName
+                + ", imageUrl=" + imageUrl + ", zone=" + zone + ", city=" + city + ", reviewCount=" + reviewCount
+                + ", rating=" + rating + ", price=" + price + ", isVerified=" + isVerified + "]";
     }
 
 }

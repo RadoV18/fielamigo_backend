@@ -10,10 +10,11 @@ import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
 @Component
 public interface CaregiverCardDao {
 
-    // FIXME: Use Dynamic SQL to get the caregivers info
+    
     @Select("""
+        <script>
         SELECT
-        USR.USER_ID, CRG.CAREGIVER_ID, IMAGE.URL AS IMAGE_URL,
+        CRG.CAREGIVER_ID AS CAREGIVER_ID, IMAGE.URL AS IMAGE_URL,
         USR_DET.FIRST_NAME, USR_DET.LAST_NAME,
         COALESCE(RES.RESERVATION_COUNT, 0),
         COALESCE(AVG(REV.RATING), 0) AS RATING,
@@ -65,6 +66,10 @@ public interface CaregiverCardDao {
             AND CAT_C.STATUS = 1
             AND USR_DET.STATUS = 1
             AND BRD.STATUS = 1
+            AND CRG.CAREGIVER_ID IN
+            <foreach item="id" index="index" collection="caregivers" open="(" separator="," close=")">
+                #{id}
+            </foreach>    
         GROUP BY USR.USER_ID,
             CRG.CAREGIVER_ID,
             IMAGE_URL,
@@ -74,6 +79,6 @@ public interface CaregiverCardDao {
             CITY,
             USR_ADD.ZONE,
             PRICE;
-            """)
-    public List<CaregiverCardDto> getCaregiversInfo(List<Integer> caregivers);
+        </script>""")
+    public List<CaregiverCardDto> getCaregiversInfo(int[] caregivers);
 }
