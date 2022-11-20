@@ -70,6 +70,7 @@ public class UserBl {
             faUserGroupDao.addUserToGroup(userId, 1);
         } else {
             faUserGroupDao.addUserToGroup(userId, 2);
+            // TODO: add user to FA_CAREGIVER table
         }
         return userId;
     }

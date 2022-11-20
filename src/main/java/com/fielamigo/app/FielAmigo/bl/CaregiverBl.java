@@ -9,6 +9,7 @@ import com.fielamigo.app.FielAmigo.dao.CaregiverCardDao;
 import com.fielamigo.app.FielAmigo.dao.FaBoardingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverExperienceDao;
+import com.fielamigo.app.FielAmigo.dao.FaCaregiverImageDao;
 import com.fielamigo.app.FielAmigo.dao.FaNursingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaTrainingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaWalkingServiceDao;
@@ -25,11 +26,12 @@ public class CaregiverBl {
     private FaNursingServiceDao faNursingServiceDao;
     private FaCaregiverDao faCaregiverDao;
     private FaCaregiverExperienceDao faCaregiverExperienceDao;
+    private FaCaregiverImageDao faCaregiverImageDao;
     
     public CaregiverBl(CaregiverCardDao caregiverCardDao, FaBoardingServiceDao faBoardingServiceDao,
         FaTrainingServiceDao faTrainingServiceDao, FaWalkingServiceDao faWalkingServiceDao,
         FaNursingServiceDao faNursingServiceDao, FaCaregiverDao faCaregiverDao,
-        FaCaregiverExperienceDao faCaregiverExperienceDao
+        FaCaregiverExperienceDao faCaregiverExperienceDao, FaCaregiverImageDao faCaregiverImageDao
     ) {
         this.caregiverCardDao = caregiverCardDao;
         this.faBoardingServiceDao = faBoardingServiceDao;
@@ -38,6 +40,7 @@ public class CaregiverBl {
         this.faNursingServiceDao = faNursingServiceDao;
         this.faCaregiverDao = faCaregiverDao;
         this.faCaregiverExperienceDao = faCaregiverExperienceDao;
+        this.faCaregiverImageDao = faCaregiverImageDao;
     }
 
     /**
@@ -101,5 +104,14 @@ public class CaregiverBl {
      */
     public List<String> getCaregiverExperienceById(int caregiverId) {
         return this.faCaregiverExperienceDao.getCaregiverExperience(caregiverId);
+    }
+
+    /**
+     * Method that returns the URLs of a caregiver's pictures
+     * @param caregiverId the id of the caregiver
+     * @return a list of Strings
+     */
+    public List<String> getCaregiverPicturesById(int caregiverId) {
+        return this.faCaregiverImageDao.getCaregiverPictures(caregiverId);
     }
 }

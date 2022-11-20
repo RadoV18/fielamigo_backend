@@ -119,8 +119,40 @@ public class CaregiversApi {
     }
 
     /**
-     *  Endpoint to get a caregiver's list of picture by a caregiverId.
+     * Endpoint to get a caregiver's list of picture by a caregiverId.
+     * @param caregiverId the caregiver's id.
+     * @param headers the request headers.
+     * @return the caregiver's list of pictures.
      */
+    @GetMapping("/{caregiverId}/pictures")
+    public ResponseEntity<ResponseDto<List<String>>> getCaregiverPictures(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable("caregiverId") Integer caregiverId
+    ) {
+        ResponseDto<List<String>> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "GET_PROFILE");
+            
+            // get the caregiver's pictures
+            List<String> pictures = caregiverBl.getCaregiverPicturesById(caregiverId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(pictures);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     /**
      * Endpoint to get a caregiver's list of experience details by a caregiverId.
