@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fielamigo.app.FielAmigo.dao.CaregiverCardDao;
 import com.fielamigo.app.FielAmigo.dao.FaBoardingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverDao;
+import com.fielamigo.app.FielAmigo.dao.FaCaregiverExperienceDao;
 import com.fielamigo.app.FielAmigo.dao.FaNursingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaTrainingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaWalkingServiceDao;
@@ -23,10 +24,12 @@ public class CaregiverBl {
     private FaWalkingServiceDao faWalkingServiceDao;
     private FaNursingServiceDao faNursingServiceDao;
     private FaCaregiverDao faCaregiverDao;
+    private FaCaregiverExperienceDao faCaregiverExperienceDao;
     
     public CaregiverBl(CaregiverCardDao caregiverCardDao, FaBoardingServiceDao faBoardingServiceDao,
         FaTrainingServiceDao faTrainingServiceDao, FaWalkingServiceDao faWalkingServiceDao,
-        FaNursingServiceDao faNursingServiceDao, FaCaregiverDao faCaregiverDao
+        FaNursingServiceDao faNursingServiceDao, FaCaregiverDao faCaregiverDao,
+        FaCaregiverExperienceDao faCaregiverExperienceDao
     ) {
         this.caregiverCardDao = caregiverCardDao;
         this.faBoardingServiceDao = faBoardingServiceDao;
@@ -34,6 +37,7 @@ public class CaregiverBl {
         this.faWalkingServiceDao = faWalkingServiceDao;
         this.faNursingServiceDao = faNursingServiceDao;
         this.faCaregiverDao = faCaregiverDao;
+        this.faCaregiverExperienceDao = faCaregiverExperienceDao;
     }
 
     /**
@@ -88,5 +92,14 @@ public class CaregiverBl {
      */
     public String getCaregiverBioById(int caregiverId) {
         return this.faCaregiverDao.getCaregiverBio(caregiverId);
+    }
+
+    /**
+     * Method that returns a list of experience details of a caregiver
+     * @param caregiverId the id of the caregiver
+     * @return a list of Strings
+     */
+    public List<String> getCaregiverExperienceById(int caregiverId) {
+        return this.faCaregiverExperienceDao.getCaregiverExperience(caregiverId);
     }
 }

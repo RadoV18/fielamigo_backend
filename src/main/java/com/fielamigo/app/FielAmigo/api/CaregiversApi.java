@@ -124,7 +124,39 @@ public class CaregiversApi {
 
     /**
      * Endpoint to get a caregiver's list of experience details by a caregiverId.
+     * @param caregiverId the caregiver's id.
+     * @param headers the request headers.
+     * @return the caregiver's list of experience details.
      */
+    @GetMapping("/{caregiverId}/experience")
+    public ResponseEntity<ResponseDto<List<String>>> getCaregiverExperience(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable("caregiverId") Integer caregiverId
+    ) {
+        ResponseDto<List<String>> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "SEARCH_BOARDING");
+            
+            // get the caregiver's experience
+            List<String> experience = caregiverBl.getCaregiverExperienceById(caregiverId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(experience);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     /**
      * Endpoint to get a caregiver's list of services by a caregiverId.
@@ -165,7 +197,6 @@ public class CaregiversApi {
     /**
      * Endpoint to get a caregiver's location by a caregiverId.
      */
-
 
     /**
      * Endpoint to get all the dates that a caregiver is not available to board a pet.
