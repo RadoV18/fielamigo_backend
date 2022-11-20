@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fielamigo.app.FielAmigo.bl.ReviewBl;
+import com.fielamigo.app.FielAmigo.dto.PaginatedDto;
 import com.fielamigo.app.FielAmigo.dto.ResponseDto;
 import com.fielamigo.app.FielAmigo.dto.ReviewResDto;
 import com.fielamigo.app.FielAmigo.utils.AuthUtil;
@@ -36,11 +38,13 @@ public class ReviewsApi {
      * @return A list of reviews.
      */
     @GetMapping("/{caregiverId}")
-    public ResponseEntity<ResponseDto<List<ReviewResDto>>> getReviewsByCaregiverId(
+    public ResponseEntity<ResponseDto<PaginatedDto<List<ReviewResDto>>>> getReviewsByCaregiverId(
             @RequestHeader Map<String, String> headers,
-            @PathVariable int caregiverId
+            @PathVariable Integer caregiverId,
+            @RequestParam(required = true) Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset
         ) {
-        ResponseDto<List<ReviewResDto>> responseDto =
+        ResponseDto<PaginatedDto<List<ReviewResDto>>> responseDto =
             new ResponseDto<>(null, null, false);
 
         try {
@@ -50,7 +54,9 @@ public class ReviewsApi {
             AuthUtil.verifyHasRole(jwt, "GET_REVIEWS");
 
             // get the reviews
-            List<ReviewResDto> reviews = reviewBl.getReviewsByCaregiverId(caregiverId);
+            PaginatedDto<List<ReviewResDto>> reviews =
+                reviewBl.getPaginatedReviewsByCaregiverId(caregiverId, limit, offset);
+            
 
             responseDto.setData(reviews);
             responseDto.setSuccessful(true);

@@ -18,7 +18,7 @@ public interface FaReviewDao {
             USR_DET.LAST_NAME
         FROM FA_REVIEW REV
         INNER JOIN FA_USER USR
-            ON REV.CAREGIVER_ID = USR.user_id
+            ON REV.CAREGIVER_ID = USR.USER_ID
         INNER JOIN FA_CAREGIVER CRG
             ON USR.USER_ID = CRG.USER_ID
         INNER JOIN FA_USER_DETAILS USR_DET
@@ -29,6 +29,25 @@ public interface FaReviewDao {
             AND CRG.STATUS = 1
             AND USR_DET.STATUS = 1
             AND CRG.CAREGIVER_ID = #{caregiverId}
+        ORDER BY REV.REVIEW_ID DESC -- recent first
+        LIMIT #{limit}
+        OFFSET #{offset}
             """)
-    List<ReviewResDto> getReviewsByCaregiverId(Integer caregiverId);
+    List<ReviewResDto> getReviewsByCaregiverId(Integer caregiverId, Integer limit, Integer offset);
+
+    @Select("""
+        SELECT
+            COUNT(REV.REVIEW_ID) AS REVIEW_COUNT
+        FROM FA_REVIEW REV
+        INNER JOIN FA_USER USR
+            ON REV.CAREGIVER_ID = USR.USER_ID
+        INNER JOIN FA_CAREGIVER CRG
+            ON USR.USER_ID = CRG.USER_ID
+        WHERE
+            REV.STATUS = 1
+            AND USR.STATUS = 1
+            AND CRG.STATUS = 1
+            AND CRG.CAREGIVER_ID = #{caregiverId}
+            """)
+    Integer getReviewCountByCaregiverId(Integer caregiverId);
 }
