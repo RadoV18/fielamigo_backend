@@ -8,17 +8,47 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.fielamigo.app.FielAmigo.dao.AvailableBoardingCaregiverDao;
+import com.fielamigo.app.FielAmigo.dao.FaBoardingReservationDao;
+import com.fielamigo.app.FielAmigo.dao.FaBoardingServiceDao;
+import com.fielamigo.app.FielAmigo.dao.FaDogBoardingDao;
+import com.fielamigo.app.FielAmigo.dao.FaDogDao;
+import com.fielamigo.app.FielAmigo.dao.FaUserDao;
+import com.fielamigo.app.FielAmigo.dto.BoardingReservationReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBoardingReqDto;
+import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 import com.fielamigo.app.FielAmigo.entity.AvailableCaregiver;
+import com.fielamigo.app.FielAmigo.entity.BoardingRate;
+import com.fielamigo.app.FielAmigo.entity.FaBoardingReservation;
+import com.fielamigo.app.FielAmigo.entity.FaDogBoarding;
+import com.fielamigo.app.FielAmigo.service.MailService;
+import com.fielamigo.app.FielAmigo.service.PaymentService;
 import com.fielamigo.app.FielAmigo.utils.Pair;
 
 @Service
 public class BoardingBl {
 
     private AvailableBoardingCaregiverDao availableBoardingCaregiverDao;
+    private FaBoardingServiceDao faBoardingServiceDao;
+    private FaBoardingReservationDao faBoardingReservationDao;
+    private FaDogBoardingDao faDogBoardingDao;
+    private PaymentService paymentService;
+    private FaUserDao faUserDao;
+    private FaDogDao faDogDao;
+    private MailService mailService;
 
-    public BoardingBl(AvailableBoardingCaregiverDao availableCaregiverDao) {
+    public BoardingBl(AvailableBoardingCaregiverDao availableCaregiverDao,
+            FaBoardingServiceDao faBoardingServiceDao, FaBoardingReservationDao faBoardingReservationDao,
+            FaDogBoardingDao faDogBoardingDao, PaymentService paymentService, FaUserDao faUserDao,
+            FaDogDao faDogDao, MailService mailService
+    ) {
         this.availableBoardingCaregiverDao = availableCaregiverDao;
+        this.faBoardingServiceDao = faBoardingServiceDao;
+        this.faBoardingReservationDao = faBoardingReservationDao;
+        this.faDogBoardingDao = faDogBoardingDao;
+        this.paymentService = paymentService;
+        this.faUserDao = faUserDao;
+        this.faDogDao = faDogDao;
+        this.mailService = mailService;
     }
 
     /**
@@ -141,5 +171,51 @@ public class BoardingBl {
         }
 
         return result;
+    }
+
+    public void book(Integer userId, BoardingReservationReqDto req) {
+        System.out.println(req);
+        // retrieve current nightly rate and pickup rate
+        BoardingRate rate = faBoardingServiceDao.getBoardingRate(req.getBoardingServiceId());
+
+        // store reservation data in fa_boarding_reservation
+        FaBoardingReservation reservation = new FaBoardingReservation();
+        reservation.setBoardingServiceId(req.getBoardingServiceId());
+
+        String paymentId = paymentService.processBoardingPayment(userId, req);
+        reservation.setPaypalOrderId(paymentId);
+        reservation.setStartingDate(req.getStartingDate());
+        reservation.setEndingDate(req.getEndingDate());
+        reservation.setNightlyRate(rate.getNightlyRate());
+        reservation.setPickupRate(rate.getPickupRate());
+        reservation.setIncludePickup(req.getIncludePickup());
+        reservation.setNotes(req.getNotes());
+        reservation.setCatStatus(4);
+        Integer reservationId = faBoardingReservationDao.create(reservation);
+        
+        // store dog data in fa_dog_boarding
+        FaDogBoarding dogBoarding = new FaDogBoarding();
+        dogBoarding.setBoardingReservationId(reservationId);
+        for(Integer dogId : req.getDogs()) {
+            dogBoarding.setDogId(dogId);
+            faDogBoardingDao.create(dogBoarding);
+        }
+
+        //send email to the user and the caregiver
+        Thread confirmationMailThread = new Thread(() -> {
+            try {
+                String userEmail = faUserDao.getUserEmail(userId);
+                String caregiverEmail = faUserDao.getCaregiverEmailFromBoardingServiceId(req.getBoardingServiceId());
+
+                // get the dogs' names
+                List<DogUserDto> dogs = faDogDao.getDogs(req.getDogs());
+
+                mailService.sendBoardingReqConfirmation(userEmail, reservationId, reservation, dogs);
+                mailService.sendNewBoardingRequest(caregiverEmail, reservationId, reservation, dogs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        confirmationMailThread.start();
     }
 }

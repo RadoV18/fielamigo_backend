@@ -12,7 +12,7 @@ import com.fielamigo.app.FielAmigo.dao.FaImageDao;
 import com.fielamigo.app.FielAmigo.dto.DogDto;
 import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 import com.fielamigo.app.FielAmigo.entity.FaDog;
-import com.fielamigo.app.FielAmigo.service.S3FileStorageService;
+import com.fielamigo.app.FielAmigo.service.S3FileStorageServiceImpl;
 
 @Service
 public class DogBl {
@@ -21,10 +21,10 @@ public class DogBl {
     private FaDogDao faDogDao;
     private FaDogImageDao faDogImageDao;
     private FaImageDao faImageDao;
-    private S3FileStorageService s3FileStorageService;
+    private S3FileStorageServiceImpl s3FileStorageService;
 
     public DogBl(DogUserDao dogUserDao, FaDogDao faDogDao, FaDogImageDao faDogImageDao,
-        FaImageDao faImageDao, S3FileStorageService s3FileStorageService
+        FaImageDao faImageDao, S3FileStorageServiceImpl s3FileStorageService
     ) {
         this.dogUserDao = dogUserDao;
         this.faDogDao = faDogDao;

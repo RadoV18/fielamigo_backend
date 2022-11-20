@@ -63,4 +63,28 @@ public interface FaUserDao {
             """)
     int findIdByEmail(String email);
 
+    @Select("""
+        SELECT
+            EMAIL
+        FROM FA_USER
+        WHERE USER_ID = #{userId}
+        AND STATUS = 1
+            """)
+    public String getUserEmail(int userId);
+
+    @Select("""
+        SELECT
+            USR.EMAIL
+        FROM FA_USER USR
+        INNER JOIN FA_CAREGIVER CRG
+            ON USR.USER_ID = CRG.USER_ID
+        INNER JOIN FA_BOARDING_SERVICE BRD
+            ON CRG.CAREGIVER_ID = BRD.CAREGIVER_ID
+        WHERE
+            BRD.BOARDING_SERVICE_ID = #{boardingServiceId}
+            AND USR.STATUS = 1
+            AND CRG.STATUS = 1
+            AND BRD.STATUS = 1
+            """)
+    public String getCaregiverEmailFromBoardingServiceId(int serviceId);
 }

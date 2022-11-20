@@ -9,7 +9,7 @@ import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 
 @Component
 public interface DogUserDao {
-    
+    // TODO: test if a dog without a picture is returned
     @Select("""
         SELECT
             D.DOG_ID,

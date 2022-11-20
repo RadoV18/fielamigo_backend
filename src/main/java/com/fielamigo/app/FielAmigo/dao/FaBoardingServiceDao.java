@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
+import com.fielamigo.app.FielAmigo.entity.BoardingRate;
 
 @Component
 public interface FaBoardingServiceDao {
@@ -33,4 +34,15 @@ public interface FaBoardingServiceDao {
             AND CRG.STATUS = 1
             """)
     public Integer getMaxDogs(int caregiverId);
+
+    @Select("""
+        SELECT
+            NIGHTLY_RATE,
+            PICKUP_RATE
+        FROM FA_BOARDING_SERVICE
+        WHERE
+            BOARDING_SERVICE_ID = #{boardingServiceId}
+            AND STATUS = 1
+            """)
+    public BoardingRate getBoardingRate(Integer boardingServiceId);
 }

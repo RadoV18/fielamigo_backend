@@ -16,7 +16,7 @@ import com.fielamigo.app.FielAmigo.entity.FaUser;
 import com.fielamigo.app.FielAmigo.entity.FaUserAddress;
 import com.fielamigo.app.FielAmigo.entity.FaUserDetails;
 import com.fielamigo.app.FielAmigo.entity.FaUserImage;
-import com.fielamigo.app.FielAmigo.service.S3FileStorageService;
+import com.fielamigo.app.FielAmigo.service.S3FileStorageServiceImpl;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -30,11 +30,11 @@ public class UserBl {
     private FaUserDetailsDao faUserDetailsDao;
     private FaUserGroupDao faUserGroupDao;
     private FaUserImageDao faUserImageDao;
-    private S3FileStorageService s3FileStorageService;
+    private S3FileStorageServiceImpl s3FileStorageService;
     
     public UserBl(FaImageDao faImageDao, FaUserDao faUserDao, FaUserAddressDao faUserAddressDao,
         FaUserDetailsDao faUserDetailsDao, FaUserGroupDao faUserGroupDao, FaUserImageDao faUserImageDao,
-        S3FileStorageService s3FileStorageService
+        S3FileStorageServiceImpl s3FileStorageService
     ) {
         this.faImageDao = faImageDao;
         this.faUserDao = faUserDao;

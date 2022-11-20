@@ -9,10 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.fielamigo.app.FielAmigo.service.FileStorageService;
 import com.fielamigo.app.FielAmigo.service.MailService;
 import com.fielamigo.app.FielAmigo.service.MailhogMailServiceImpl;
+import com.fielamigo.app.FielAmigo.service.MockPaymentServiceImpl;
+import com.fielamigo.app.FielAmigo.service.PaymentService;
 import com.fielamigo.app.FielAmigo.service.S3FileStorageServiceImpl;
 
 @SpringBootApplication
@@ -36,6 +37,10 @@ public class FielAmigoApplication {
 	@Bean
 	public MailService mailService() {
 		return new MailhogMailServiceImpl();
+	}
+
+	@Bean PaymentService paymentService() {
+		return new MockPaymentServiceImpl();
 	}
 
 	public static void main(String[] args) {
