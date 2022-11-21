@@ -8,16 +8,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fielamigo.app.FielAmigo.bl.BoardingBl;
+import com.fielamigo.app.FielAmigo.bl.BoardingServiceBl;
 import com.fielamigo.app.FielAmigo.bl.CaregiverBl;
+import com.fielamigo.app.FielAmigo.dto.BoardingServiceDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBoardingReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
+import com.fielamigo.app.FielAmigo.dto.MessagDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBookedDateDto;
 import com.fielamigo.app.FielAmigo.dto.ResponseDto;
 import com.fielamigo.app.FielAmigo.utils.AuthUtil;
@@ -31,10 +36,12 @@ public class CaregiversApi {
 
     private BoardingBl boardingBl;
     private CaregiverBl caregiverBl;
+    private BoardingServiceBl boardingServiceBl;
 
-    public CaregiversApi(BoardingBl boardingBl, CaregiverBl caregiverBl) {
+    public CaregiversApi(BoardingBl boardingBl, CaregiverBl caregiverBl, BoardingServiceBl boardingServiceBl) {
         this.boardingBl = boardingBl;
         this.caregiverBl = caregiverBl;
+        this.boardingServiceBl = boardingServiceBl;
     }
 
     /**
@@ -82,6 +89,42 @@ public class CaregiversApi {
             return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
         }
 
+    }
+
+    /**
+     * Endpoint to set the services of a caregiver. (boarding)
+    */
+    @PostMapping("/boarding/services")
+    public ResponseEntity<ResponseDto<MessagDto>> createBoardingService(
+        @RequestHeader Map<String, String> headers,
+        @RequestBody BoardingServiceDto boardingServiceDto
+    ) {
+        ResponseDto<MessagDto> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "CREATE_BOARDING");
+
+            // gets the caregiver id from the token
+            int caregiverId = JwtUtil.getUserIdFromToken(jwt);
+            
+            // create the service
+            boardingServiceBl.createBoardingService(caregiverId, boardingServiceDto);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(new MessagDto("Boarding Service created successfully"));
+            // set data
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
     }
 
     /**

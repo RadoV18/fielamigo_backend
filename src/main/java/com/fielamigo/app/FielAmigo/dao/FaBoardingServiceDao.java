@@ -1,10 +1,12 @@
 package com.fielamigo.app.FielAmigo.dao;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
 import com.fielamigo.app.FielAmigo.entity.BoardingRate;
+import com.fielamigo.app.FielAmigo.entity.FaBoardingService;
 
 @Component
 public interface FaBoardingServiceDao {
@@ -45,4 +47,10 @@ public interface FaBoardingServiceDao {
             AND STATUS = 1
             """)
     public BoardingRate getBoardingRate(Integer boardingServiceId);
+
+    @Insert("""
+        INSERT INTO FA_BOARDING_SERVICE(caregiver_id, nightly_rate, max_nights, max_dogs, can_pickup, pickup_rate, tx_host, tx_user, tx_date)
+        VALUES(#{caregiverId}, #{nightlyRate}, #{maxNumberOfNights}, #{maxNumberOfDogs}, #{canPickup}, #{pickupRate}, 'localhost', 'anonymous', NOW())
+            """)
+    public void createBoardingService(FaBoardingService faBoardingService);
 }
