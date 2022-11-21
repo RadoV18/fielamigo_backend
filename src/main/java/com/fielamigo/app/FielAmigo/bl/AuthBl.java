@@ -64,11 +64,12 @@ public class AuthBl {
                 }
 
                 // check if the user is an owner
-                Integer caregiverCount = faUserDao.checkIfOwner(userId);
+                Integer caregiverId = faUserDao.checkIfCaregiver(userId);
 
                 boolean isOwner = true;
-                if(caregiverCount > 0) {
+                if(caregiverId > 0) {
                     isOwner = false;
+                    userId = caregiverId;
                 }
 
                 // generate token and refresh token.

@@ -90,7 +90,7 @@ public interface FaUserDao {
 
     @Select("""
         SELECT
-            COUNT(*) AS COUNT
+            CRG.CAREGIVER_ID
         FROM FA_USER USR
         INNER JOIN FA_CAREGIVER CRG
             ON USR.USER_ID = CRG.USER_ID
@@ -99,5 +99,5 @@ public interface FaUserDao {
             AND USR.STATUS = 1
             AND CRG.STATUS = 1
             """)
-    public Integer checkIfOwner(Integer userId);
+    public Integer checkIfCaregiver(Integer userId);
 }

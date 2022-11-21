@@ -2,8 +2,8 @@ POST http://localhost:8080/api/v1/users
 Content-Type: application/json
 
 {
-  "email": "igui4@domain.com",
-  "password": "S3cur3Passw0rd",
+  "email": "crg1@domain.com",
+  "password": "abc123def456",
   "isOwner": false
 }
 
@@ -14,8 +14,8 @@ POST http://localhost:8080/api/v1/auth/verification-code
 Content-Type: application/json
 
 {
-    "cookie": "3b5072a3-a4b2-4cef-9a6e-1345c66ceef2",
-    "code": 5675
+    "cookie": "555e3cfc-5989-4657-a0e9-2b56397ea849",
+    "code": 6003
 }
 
 ###
@@ -24,8 +24,8 @@ POST http://localhost:8080/api/v1/auth
 Content-Type: application/json
 
 {
-  "email": "igui4@domain.com",
-  "password": "S3cur3Passw0rd"
+  "email": "crg1@domain.com",
+  "password": "abc123def456"
 }
 
 

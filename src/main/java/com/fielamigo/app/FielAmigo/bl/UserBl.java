@@ -13,6 +13,7 @@ import com.fielamigo.app.FielAmigo.dao.FaUserImageDao;
 import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
 import com.fielamigo.app.FielAmigo.dto.UserAddressReqDto;
 import com.fielamigo.app.FielAmigo.dto.UserDetailsReqDto;
+import com.fielamigo.app.FielAmigo.dto.UserDetailsResDto;
 import com.fielamigo.app.FielAmigo.entity.FaUser;
 import com.fielamigo.app.FielAmigo.entity.FaUserAddress;
 import com.fielamigo.app.FielAmigo.entity.FaUserDetails;
@@ -136,6 +137,15 @@ public class UserBl {
         faUserImage.setUserId(userId);
         faUserImage.setImageId(imageId);
         this.faUserImageDao.addUserImage(faUserImage);
+    }
+
+    /**
+     * Method that gets the user details of a user.
+     * @param userId the user id.
+     * @return the user details.
+     */
+    public UserDetailsResDto getUserDetails(int userId) {
+        return this.faUserDetailsDao.getUserDetailsById(userId);
     }
 
 }
