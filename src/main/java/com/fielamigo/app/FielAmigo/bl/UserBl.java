@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.bl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fielamigo.app.FielAmigo.dao.FaCaregiverDao;
 import com.fielamigo.app.FielAmigo.dao.FaImageDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserAddressDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserDao;
@@ -31,10 +32,11 @@ public class UserBl {
     private FaUserGroupDao faUserGroupDao;
     private FaUserImageDao faUserImageDao;
     private S3FileStorageServiceImpl s3FileStorageService;
+    private FaCaregiverDao faCaregiverDao;
     
     public UserBl(FaImageDao faImageDao, FaUserDao faUserDao, FaUserAddressDao faUserAddressDao,
         FaUserDetailsDao faUserDetailsDao, FaUserGroupDao faUserGroupDao, FaUserImageDao faUserImageDao,
-        S3FileStorageServiceImpl s3FileStorageService
+        S3FileStorageServiceImpl s3FileStorageService, FaCaregiverDao faCaregiverDao
     ) {
         this.faImageDao = faImageDao;
         this.faUserDao = faUserDao;
@@ -43,6 +45,7 @@ public class UserBl {
         this.faUserImageDao = faUserImageDao;
         this.faUserGroupDao = faUserGroupDao;
         this.s3FileStorageService = s3FileStorageService;
+        this.faCaregiverDao = faCaregiverDao;
     }
 
     /**
@@ -70,7 +73,7 @@ public class UserBl {
             faUserGroupDao.addUserToGroup(userId, 1);
         } else {
             faUserGroupDao.addUserToGroup(userId, 2);
-            // TODO: add user to FA_CAREGIVER table
+            faCaregiverDao.create(userId);
         }
         return userId;
     }

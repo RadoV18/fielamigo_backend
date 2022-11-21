@@ -1,5 +1,6 @@
 package com.fielamigo.app.FielAmigo.dao;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
@@ -14,4 +15,10 @@ public interface FaCaregiverDao {
             AND CRG.STATUS = 1
             """)
     public String getCaregiverBio(int caregiverId);
+
+    @Insert("""
+        INSERT INTO FA_CAREGIVER (USER_ID, TX_HOST, TX_USER, TX_DATE)
+        VALUES (#{caregiverId}, 'localhost', 'admin', NOW())  
+            """)
+    public void create(int userId);
 }
