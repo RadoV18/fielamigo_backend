@@ -39,7 +39,7 @@ public class AuthApi {
      * @param authReqDto the user's email and password.
      * @return response with token and refresh token.
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ResponseDto<AuthResDto>> login(@RequestBody AuthReqDto authReqDto) {
         try {
             // validate data

@@ -63,9 +63,17 @@ public class AuthBl {
                     rolesAsString.add(role.getName());
                 }
 
+                // check if the user is an owner
+                Integer caregiverCount = faUserDao.checkIfOwner(userId);
+
+                boolean isOwner = true;
+                if(caregiverCount > 0) {
+                    isOwner = false;
+                }
+
                 // generate token and refresh token.
-                String token = JwtUtil.generateToken(userId, user, rolesAsString, 30000);
-                String refreshToken = JwtUtil.generateToken(userId, user, rolesAsString, 50000);
+                String token = JwtUtil.generateToken(userId, user, rolesAsString, 30000, isOwner);
+                String refreshToken = JwtUtil.generateToken(userId, user, rolesAsString, 50000, isOwner);
 
                 // set the result
                 result.setToken(token);

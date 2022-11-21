@@ -21,7 +21,8 @@ public class JwtUtil {
      * @param expirationTimeInSeconds the expiration time in seconds
      * @return the JWT token
      */
-    public static String generateToken(int userId, FaUserDetails userDetails, List<String> roles, int expirationTimeInSeconds) {
+    public static String generateToken(int userId, FaUserDetails userDetails, List<String> roles,
+        int expirationTimeInSeconds, boolean isOwner) {
         String result;
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
@@ -33,6 +34,7 @@ public class JwtUtil {
                 .withClaim("userId", userId)
                 .withClaim("firstName", userDetails.getFirstName())
                 .withClaim("lastName", userDetails.getLastName())
+                .withClaim("isOwner", isOwner)
                 .withArrayClaim("roles", roles.toArray(new String[roles.size()]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSeconds * 1000))
                 .sign(algorithm);
@@ -41,6 +43,7 @@ public class JwtUtil {
                 .withIssuer("fielamigo")
                 .withSubject(String.valueOf(userId))
                 .withClaim("userId", userId)
+                .withClaim("isOwner", isOwner)
                 .withArrayClaim("roles", roles.toArray(new String[roles.size()]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSeconds * 1000))
                 .sign(algorithm);

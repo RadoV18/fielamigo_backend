@@ -87,4 +87,17 @@ public interface FaUserDao {
             AND BRD.STATUS = 1
             """)
     public String getCaregiverEmailFromBoardingServiceId(int serviceId);
+
+    @Select("""
+        SELECT
+            COUNT(*) AS COUNT
+        FROM FA_USER USR
+        INNER JOIN FA_CAREGIVER CRG
+            ON USR.USER_ID = CRG.USER_ID
+        WHERE
+            USR.USER_ID = #{userId}
+            AND USR.STATUS = 1
+            AND CRG.STATUS = 1
+            """)
+    public Integer checkIfOwner(Integer userId);
 }
