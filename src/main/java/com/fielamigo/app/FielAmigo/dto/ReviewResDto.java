@@ -6,13 +6,17 @@ public class ReviewResDto {
     private String comments;
     private String firstName;
     private String lastName;
+    private String imageUrl;
 
-    public ReviewResDto(Integer reviewId, Integer rating, String comments, String firstName, String lastName) {
+    public ReviewResDto(Integer reviewId, Integer rating, String comments,
+        String firstName, String lastName, String imageUrl
+    ) {
         this.reviewId = reviewId;
         this.rating = rating;
         this.comments = comments;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.imageUrl = imageUrl;
     }
 
     public Integer getReviewId() {
@@ -55,10 +59,18 @@ public class ReviewResDto {
         this.lastName = lastName;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public String toString() {
         return "ReviewResDto [reviewId=" + reviewId + ", rating=" + rating + ", comments=" + comments + ", firstName="
-                + firstName + ", lastName=" + lastName + "]";
+                + firstName + ", lastName=" + lastName + ", imageUrl=" + imageUrl + "]";
     }
 
 }
