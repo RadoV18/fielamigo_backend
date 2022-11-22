@@ -69,12 +69,13 @@ public class AuthBl {
                 boolean isOwner = true;
                 if(caregiverId != null) {
                     isOwner = false;
-                    userId = caregiverId;
                 }
 
                 // generate token and refresh token.
-                String token = JwtUtil.generateToken(userId, user, rolesAsString, 30000, isOwner);
-                String refreshToken = JwtUtil.generateToken(userId, user, rolesAsString, 50000, isOwner);
+                String token = JwtUtil.generateToken(userId, caregiverId, user,
+                    rolesAsString, 30000, isOwner);
+                String refreshToken = JwtUtil.generateToken(userId, caregiverId,
+                    user, rolesAsString, 50000, isOwner);
 
                 // set the result
                 result.setToken(token);

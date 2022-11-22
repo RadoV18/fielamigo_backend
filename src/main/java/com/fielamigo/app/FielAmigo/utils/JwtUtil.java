@@ -21,8 +21,10 @@ public class JwtUtil {
      * @param expirationTimeInSeconds the expiration time in seconds
      * @return the JWT token
      */
-    public static String generateToken(int userId, FaUserDetails userDetails, List<String> roles,
-        int expirationTimeInSeconds, boolean isOwner) {
+    public static String generateToken(int userId, int caregiverId,
+        FaUserDetails userDetails, List<String> roles, int expirationTimeInSeconds,
+        boolean isOwner
+    ) {
         String result;
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
@@ -32,6 +34,7 @@ public class JwtUtil {
                 .withIssuer("fielamigo")
                 .withSubject(String.valueOf(userId))
                 .withClaim("userId", userId)
+                .withClaim("caregiverId", caregiverId)
                 .withClaim("firstName", userDetails.getFirstName())
                 .withClaim("lastName", userDetails.getLastName())
                 .withClaim("isOwner", isOwner)
@@ -43,6 +46,7 @@ public class JwtUtil {
                 .withIssuer("fielamigo")
                 .withSubject(String.valueOf(userId))
                 .withClaim("userId", userId)
+                .withClaim("caregiverId", caregiverId)
                 .withClaim("isOwner", isOwner)
                 .withArrayClaim("roles", roles.toArray(new String[roles.size()]))
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSeconds * 1000))
@@ -73,6 +77,26 @@ public class JwtUtil {
             throw new UnauthorizedException("Error verifying token");
         }
         return userId;
+    }
+
+    /**
+     * Returns the caregiverId from the token
+     * @param jwt the token
+     * @return the caregiverId
+     * @throws UnauthorizedException if the token is invalid
+     */
+    public static int getCaregiverIdFromToken(String jwt) throws UnauthorizedException {
+        int caregiverId;
+        try {
+            caregiverId = JWT.require(Algorithm.HMAC256(JWT_SECRET))
+                .build()
+                .verify(jwt)
+                .getClaim("caregiverId")
+                .asInt();
+        } catch (JWTVerificationException e) {
+            throw new UnauthorizedException("Error verifying token");
+        }
+        return caregiverId;
     }
 
     /**
