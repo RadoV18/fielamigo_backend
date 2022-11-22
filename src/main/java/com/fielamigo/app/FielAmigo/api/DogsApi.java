@@ -125,11 +125,7 @@ public class DogsApi {
             AuthUtil.verifyHasRole(jwt, "ADD_DOG");
             // get the user id from the token
             int userId = JwtUtil.getUserIdFromToken(jwt);
-            // check if the userId of the token is the same as the userId in the request body
-            if (userId != data.getUserId()) {
-                throw new FielAmigoException("The userId in the token is not the same as the userId in the request body");
-            }
-
+            data.setUserId(userId);
             // create the dog
             dogBl.addDog(data, image);
 

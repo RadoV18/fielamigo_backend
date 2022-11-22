@@ -64,10 +64,11 @@ public class AuthBl {
                 }
 
                 // check if the user is an owner
-                Integer caregiverId = faUserDao.checkIfCaregiver(userId);
+                Integer id = faUserDao.checkIfCaregiver(userId);
+                int caregiverId = id == null ? -1 : id;
 
                 boolean isOwner = true;
-                if(caregiverId != null) {
+                if(caregiverId != -1) {
                     isOwner = false;
                 }
 

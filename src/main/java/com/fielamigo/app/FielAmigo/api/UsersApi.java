@@ -190,4 +190,6 @@ public class UsersApi {
             return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
         }
     }
+
+    // TODO: get current user's address
 }
