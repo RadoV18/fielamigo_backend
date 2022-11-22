@@ -2,6 +2,8 @@ package com.fielamigo.app.FielAmigo.dto;
 
 import java.util.Date;
 
+import com.fielamigo.app.FielAmigo.utils.DateUtil;
+
 public class DogUserDto {
     private Integer dogId;
     private Integer userId;
@@ -87,5 +89,17 @@ public class DogUserDto {
                 + ", birthDate=" + birthDate + ", size=" + size + ", breed=" + breed + ", imageUrl=" + imageUrl + "]";
     }
 
-    
+    public String toHtmlString() {
+        return """
+            <div class=\"card\">
+                <div>
+                    <img src=\"%s\" />
+                </div>
+                <div class=\"info\">
+                    <h2>%s</h2>
+                    <h5>%s - %s - %s</h5>
+                </div>
+            </div>
+                """.formatted(imageUrl, name, breed, size, (DateUtil.getAge(birthDate) + " años"));
+    }
 }

@@ -1,5 +1,7 @@
 package com.fielamigo.app.FielAmigo;
 
+import java.util.TimeZone;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -44,6 +46,7 @@ public class FielAmigoApplication {
 	}
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		SpringApplication.run(FielAmigoApplication.class, args);
 	}
 

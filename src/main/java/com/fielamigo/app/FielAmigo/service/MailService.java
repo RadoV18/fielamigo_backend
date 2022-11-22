@@ -1,12 +1,8 @@
 package com.fielamigo.app.FielAmigo.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.fielamigo.app.FielAmigo.dto.CreateUserDto;
-import com.fielamigo.app.FielAmigo.dto.DogUserDto;
-import com.fielamigo.app.FielAmigo.entity.FaBoardingReservation;
 
 @Service
 public interface MailService {
@@ -26,17 +22,23 @@ public interface MailService {
      * @param faBoardingReservation the reservation details.
      * @param dogs the dogs in the reservation.
      */
-    public void sendBoardingReqConfirmation(String userEmail, Integer reservationId,
-        FaBoardingReservation faBoardingReservation, List<DogUserDto> dogs) throws Exception;
+    public void sendBoardingReqConfirmation(
+        String userEmail, Integer reservationId, String startingDay, String startingDate,
+        String endingDay, String endingDate, String dogString, String notes, double nightlyRate,
+        int nights, double subTotal, double pickupRate, double total
+    ) throws Exception;
 
     /**
-     * Sends a boarding reservation request email to the user.
+     * Sends a boarding reservation request email to the caregiver.
      * @param caregiverEmail the caregiver's email.
      * @param reservationId the reservation id.
      * @param faBoardingReservation the reservation details.
      * @param dogs the dogs in the reservation.
      */
-    public void sendNewBoardingRequest(String caregiverEmail, Integer reservationId,
-        FaBoardingReservation faBoardingReservation, List<DogUserDto> dogs) throws Exception;
+    public void sendNewBoardingRequest(
+        String caregiverEmail, Integer reservationId, String startingDay, String startingDate,
+        String endingDay, String endingDate, String dogString, String notes, double nightlyRate,
+        int nights, double subTotal, double pickupRate, double total
+    ) throws Exception;
 
 }

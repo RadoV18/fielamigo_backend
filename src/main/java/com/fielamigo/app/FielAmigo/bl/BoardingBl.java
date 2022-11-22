@@ -22,6 +22,7 @@ import com.fielamigo.app.FielAmigo.entity.FaBoardingReservation;
 import com.fielamigo.app.FielAmigo.entity.FaDogBoarding;
 import com.fielamigo.app.FielAmigo.service.MailService;
 import com.fielamigo.app.FielAmigo.service.PaymentService;
+import com.fielamigo.app.FielAmigo.utils.DateUtil;
 import com.fielamigo.app.FielAmigo.utils.Pair;
 
 @Service
@@ -207,11 +208,40 @@ public class BoardingBl {
                 String userEmail = faUserDao.getUserEmail(userId);
                 String caregiverEmail = faUserDao.getCaregiverEmailFromBoardingServiceId(req.getBoardingServiceId());
 
+                String startingDay = DateUtil.getSpanishDay(req.getStartingDate());
+                String startingDate = DateUtil.getSpanishDate(req.getStartingDate());
+                String endingDay = DateUtil.getSpanishDay(req.getEndingDate());
+                String endingDate = DateUtil.getSpanishDate(req.getEndingDate());
+
                 // get the dogs' names
                 List<DogUserDto> dogs = faDogDao.getDogs(req.getDogs());
+                String dogString = "";
 
-                mailService.sendBoardingReqConfirmation(userEmail, reservationId, reservation, dogs);
-                mailService.sendNewBoardingRequest(caregiverEmail, reservationId, reservation, dogs);
+                for(DogUserDto dog : dogs) {
+                    dogString += dog.toHtmlString();
+                }
+
+                String notes = req.getNotes() == null ? "" : req.getNotes();
+
+                int nights = DateUtil.getNights(req.getStartingDate(), req.getEndingDate());
+                double nightlyRate = reservation.getNightlyRate();
+                double subTotal = nights * nightlyRate;
+                double pickupRate = reservation.getPickupRate();
+                double total = subTotal;
+                if(req.getIncludePickup()) {
+                    total += reservation.getPickupRate();
+                } else {
+                    pickupRate = 0;
+                }
+
+                mailService.sendBoardingReqConfirmation(
+                    userEmail, reservationId, startingDay, startingDate, endingDay,
+                    endingDate, dogString, notes, nightlyRate, nights, subTotal, pickupRate, total
+                );
+                mailService.sendNewBoardingRequest(
+                    caregiverEmail, reservationId, startingDay, startingDate, endingDay,
+                    endingDate, dogString, notes, nightlyRate, nights, subTotal, pickupRate, total
+                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
