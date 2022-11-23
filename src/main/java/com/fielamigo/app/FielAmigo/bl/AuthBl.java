@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.fielamigo.app.FielAmigo.dao.FaCommonPasswordsDao;
 import com.fielamigo.app.FielAmigo.dao.FaRoleDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserDao;
 import com.fielamigo.app.FielAmigo.dao.FaUserDetailsDao;
@@ -23,11 +24,15 @@ public class AuthBl {
     private FaUserDao faUserDao;
     private FaRoleDao faRoleDao;
     private FaUserDetailsDao faUserDetailsDao;
+    private FaCommonPasswordsDao faCommonPasswordsDao;
 
-    public AuthBl(FaUserDao faUserDao, FaRoleDao faRoleDao, FaUserDetailsDao faUserDetailsDao) {
+    public AuthBl(FaUserDao faUserDao, FaRoleDao faRoleDao,
+        FaUserDetailsDao faUserDetailsDao, FaCommonPasswordsDao faCommonPasswordsDao
+    ) {
         this.faUserDao = faUserDao;
         this.faRoleDao = faRoleDao;
         this.faUserDetailsDao = faUserDetailsDao;
+        this.faCommonPasswordsDao = faCommonPasswordsDao;
     }
 
     /**
@@ -99,6 +104,9 @@ public class AuthBl {
      * @return true if the password is a common password, false otherwise.
      */
     public void isCommonPassword(String password) throws FielAmigoException {
-        // TODO: implement
+        int result = faCommonPasswordsDao.checkPassword(password);
+        if(result > 0) {
+            throw new FielAmigoException("Password is too common");
+        }
     }
 }
