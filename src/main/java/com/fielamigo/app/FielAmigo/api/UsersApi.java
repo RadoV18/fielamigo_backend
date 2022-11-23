@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -182,6 +183,44 @@ public class UsersApi {
             responseDto.setMessage("Address added successfully");
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
 
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * Endpoint to get a user's profile picture
+     * @param headers the request headers.
+     * @return the user's profile picture url.
+     */
+    @GetMapping("/{userId}/profile-picture")
+    public ResponseEntity<ResponseDto<String>> getProfilePicture(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable int userId
+    ) {
+        ResponseDto<String> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "GET_PROFILE");
+
+            // get the user's profile picture
+            String profilePicture = userBl.getProfilePicture(userId);
+
+            if(profilePicture == null) {
+                responseDto.setSuccessful(false);
+                responseDto.setMessage("Profile picture not found");
+                return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
+            }
+
+            responseDto.setSuccessful(true);
+            responseDto.setData(profilePicture);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (FielAmigoException e) {
             responseDto.setMessage(e.getMessage());
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

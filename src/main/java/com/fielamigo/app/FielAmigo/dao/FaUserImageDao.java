@@ -1,6 +1,7 @@
 package com.fielamigo.app.FielAmigo.dao;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 import com.fielamigo.app.FielAmigo.entity.FaUserImage;
@@ -15,5 +16,16 @@ public interface FaUserImageDao {
         )
             """)
     public void addUserImage(FaUserImage faUserImage);
+
+    @Select("""
+        SELECT
+            IMAGE.URL
+        FROM FA_USER_IMAGE USR_IMG
+        INNER JOIN FA_IMAGE IMAGE
+            ON USR_IMG.IMAGE_ID = IMAGE.IMAGE_ID
+        WHERE USR_IMG.USER_ID = #{userId}
+        AND USR_IMG.STATUS = 1
+            """)
+    public String getProfilePicture(int userId);
     
 }

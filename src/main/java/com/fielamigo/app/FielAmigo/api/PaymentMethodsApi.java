@@ -75,7 +75,7 @@ public class PaymentMethodsApi {
             new ResponseDto<>(null, null, false);
         try {
             // TODO: validate data
-
+            System.out.println(paymentMethodReqDto);
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
             // check if the token is valid

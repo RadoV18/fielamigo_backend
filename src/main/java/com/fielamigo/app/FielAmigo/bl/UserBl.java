@@ -148,4 +148,8 @@ public class UserBl {
         return this.faUserDetailsDao.getUserDetailsById(userId);
     }
 
+    public String getProfilePicture(int userId) {
+        return faUserImageDao.getProfilePicture(userId);
+    }
+
 }
