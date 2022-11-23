@@ -222,4 +222,12 @@ public class CaregiverBl {
         int imageId = this.faImageDao.addImage(url);
         this.faCaregiverImageDao.uploadPicture(id, imageId);
     }
+
+    /**
+     * Method to get the list of house details of a caregiver by his id.
+     * @param id the id of the caregiver
+     */
+    public List<String> getHouseDetails(int id) {
+        return this.faHouseDetailsDao.getHouseDetails(id);
+    }
 }

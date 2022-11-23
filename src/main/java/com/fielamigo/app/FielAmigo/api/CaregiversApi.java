@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -358,7 +359,7 @@ public class CaregiversApi {
     @PostMapping("/pictures")
     public ResponseEntity<ResponseDto<Void>> uploadPicture(
         @RequestHeader Map<String, String> headers,
-        @RequestParam("image") MultipartFile image
+        @RequestPart MultipartFile image
     ) {
         ResponseDto<Void> responseDto = new ResponseDto<>(null, null, false);
 
@@ -378,6 +379,36 @@ public class CaregiversApi {
             responseDto.setData(null);
 
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/{caregiverId}/house-details")
+    public ResponseEntity<ResponseDto<List<String>>> getHouseDetails (
+        @RequestHeader Map<String, String> headers,
+        @PathVariable Integer caregiverId
+    ) {
+        ResponseDto<List<String>> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "GET_PROFILE");
+
+            // get the caregiver's house details
+            List<String> houseDetails = caregiverBl.getHouseDetails(caregiverId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(houseDetails);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (FielAmigoException e) {
             responseDto.setMessage(e.getMessage());
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

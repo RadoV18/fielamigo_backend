@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 
 public interface FaHouseDetailsDao {
     @Insert("""
@@ -16,4 +17,12 @@ public interface FaHouseDetailsDao {
     </script>
             """)
     public void uploadHouseDetails(int caregiverId, List<String> houseFeatures);
+
+    @Select("""
+        SELECT
+            DETAIL
+        FROM FA_HOUSE_DETAILS
+        WHERE CAREGIVER_ID = #{caregiverId}
+            """)
+    public List<String> getHouseDetails(int caregiverId);
 }
