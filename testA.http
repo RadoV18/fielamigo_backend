@@ -1,0 +1,74 @@
+POST http://localhost:8080/api/v1/auth
+Content-Type: application/json
+
+{  
+    "email": "alex3@mail.com",
+    "password": "UnPerroComiendo"
+}
+
+###
+// login de owner
+POST http://localhost:8080/api/v1/auth
+Content-Type: application/json
+
+{  
+    "email": "alexOwner4@mail.com",
+    "password": "UnPerroComiendo"
+}
+
+###
+//endpoint para mostrar las reservas completadas del cuidador
+
+GET http://localhost:8080/api/v1/boarding-reservations/caregiver
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwiaXNPd25lciI6ZmFsc2UsInJvbGVzIjpbIkdFVF9ET0dTIiwiR0VUX1BST0ZJTEUiLCJHRVRfUkVWSUVXUyIsIkNBTkNFTF9CT09LSU5HIiwiVVBEQVRFX0JPT0tJTkciLCJDUkVBVEVfQk9BUkRJTkciLCJDUkVBVEVfVFJBSU5JTkciLCJDUkVBVEVfV0FMS0lORyIsIkNSRUFURV9OVVJTSU5HIiwiVVBEQVRFX0JPQVJESU5HIiwiVVBEQVRFX1RSQUlOSU5HIiwiVVBEQVRFX1dBTEtJTkciLCJVUERBVEVfTlVSU0lORyIsIkFERF9FWFBFUklFTkNFIiwiQUREX0hPVVNFX0RFVEFJTFMiLCJHRVRfQ0FSRUdJVkVSX0JPT0tJTkdTIiwiQ09ORklSTV9CT09LSU5HIiwiUkVKRUNUX0JPT0tJTkciLCJHRVRfRE9HX0JZX0lEIiwiRklOSVNIX0JPT0tJTkciLCJTRU5EX01FU1NBR0UiLCJVUERBVEVfUFJPRklMRSJdLCJpc3MiOiJmaWVsYW1pZ28iLCJjYXJlZ2l2ZXJJZCI6NiwiZXhwIjoxNjY5MjYwODg4LCJ1c2VySWQiOjh9.MDsUHXAxNffw6U2n1wcuNopjjkvQx5daBguscLBBR4c
+
+###
+//endpoint para mostrar las reservas del due;o
+
+GET http://localhost:8080/api/v1/boarding-reservations/owner
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImlzT3duZXIiOnRydWUsInJvbGVzIjpbIkdFVF9ET0dTIiwiQUREX0RPRyIsIlNFQVJDSF9CT0FSRElORyIsIkJPT0tfQk9BUkRJTkciLCJTRUFSQ0hfV0FMS0lORyIsIkJPT0tfV0FMS0lORyIsIlNFQVJDSF9UUkFJTklORyIsIkJPT0tfVFJBSU5JTkciLCJTRUFSQ0hfTlVSU0lORyIsIkJPT0tfTlVSU0lORyIsIkdFVF9QUk9GSUxFIiwiR0VUX1JFVklFV1MiLCJHRVRfSU5TVVJBTkNFX1BMQU5TIiwiQlVZX0lOU1VSQU5DRSIsIlZJRVdfVkVURVJJTkFSSUVTIiwiQUREX1BBWU1FTlRfTUVUSE9EIiwiR0VUX09XTkVSX0JPT0tJTkdTIiwiR0VUX0RPR19CWV9JRCIsIlNFTkRfTUVTU0FHRSIsIlVQREFURV9QUk9GSUxFIl0sImlzcyI6ImZpZWxhbWlnbyIsImNhcmVnaXZlcklkIjotMSwiZXhwIjoxNjY5MjYxMDg4LCJ1c2VySWQiOjEwfQ.LPLHVtKqsywpQwa8yVGw07soJ67ocXd4Z3IqDSHASGE
+
+
+###
+# Create Caregiver user
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "email": "alex3@mail.com",
+  "password": "UnPerroComiendo",
+  "isOwner": false
+}
+
+###
+# Create Owner user
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "email": "alexOwner4@mail.com",
+  "password": "UnPerroComiendo",
+  "isOwner": true
+}
+
+###
+# Verify user
+POST http://localhost:8080/api/v1/auth/verification-code
+Content-Type: application/json
+
+{
+    "cookie": "f229b467-615a-4d5f-bd88-89e0e79a6756",
+    "code": 8992
+}
+
+###
+#Authenticate user
+POST http://localhost:8080/api/v1/auth
+Content-Type: application/json
+
+{
+  "email": "alex3@mail.com",
+  "password": "UnPerroComiendo"
+}
+
+###
