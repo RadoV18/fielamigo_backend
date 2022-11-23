@@ -48,6 +48,7 @@ public class S3FileStorageServiceImpl implements FileStorageService {
             // upload file
             amazonS3.putObject(bucketName, randomUUIDString, file.getInputStream(), objectMetadata);
             String url = amazonS3.getUrl(bucketName, randomUUIDString).toString();
+            url = url.replace("https", "http");
 
             return url;
         } catch(AmazonServiceException e) {
