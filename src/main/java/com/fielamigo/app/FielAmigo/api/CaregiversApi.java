@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fielamigo.app.FielAmigo.bl.BoardingBl;
 import com.fielamigo.app.FielAmigo.bl.BoardingServiceBl;
 import com.fielamigo.app.FielAmigo.bl.CaregiverBl;
+import com.fielamigo.app.FielAmigo.dto.BioDetailsReqDto;
 import com.fielamigo.app.FielAmigo.dto.BoardingServiceDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBoardingReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
@@ -271,8 +273,41 @@ public class CaregiversApi {
     }
 
     /**
-     * Endpoint to get a caregiver's location by a caregiverId.
-     */
+     * Endpoint to upload the user's bio.
+     * @param headers the request headers.
+     * @param bioReqDto the user's bio.
+    */
+    @PostMapping("/bio-details")
+    public ResponseEntity<ResponseDto<String>> uploadBioDetails(
+        @RequestHeader Map<String, String> headers,
+        @RequestBody BioDetailsReqDto bioDetailsReqDto
+    ) {
+        ResponseDto<String> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "ADD_EXPERIENCE");
+            
+            // get the user's id
+            Integer caregiverId = JwtUtil.getCaregiverIdFromToken(jwt);
+            // upload the user's bio
+            caregiverBl.uploadBioDetails(caregiverId, bioDetailsReqDto);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(null);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     /**
      * Endpoint to get all the dates that a caregiver is not available to board a pet.
@@ -306,6 +341,43 @@ public class CaregiversApi {
             responseDto.setData(unavailableDates);
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * Endpoint to upload a picture to be shown in the user's profile.
+     * @param headers the request headers.
+     * @param image the image to be uploaded.
+     */
+    @PostMapping("/pictures")
+    public ResponseEntity<ResponseDto<Void>> uploadPicture(
+        @RequestHeader Map<String, String> headers,
+        @RequestParam("image") MultipartFile image
+    ) {
+        ResponseDto<Void> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "ADD_EXPERIENCE");
+            
+            // get the user's id
+            Integer caregiverId = JwtUtil.getCaregiverIdFromToken(jwt);
+            // upload the picture
+            caregiverBl.uploadPicture(caregiverId, image);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(null);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         } catch (FielAmigoException e) {
             responseDto.setMessage(e.getMessage());
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

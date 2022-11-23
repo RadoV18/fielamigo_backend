@@ -2,6 +2,7 @@ package com.fielamigo.app.FielAmigo.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 
 public interface FaCaregiverImageDao {
@@ -20,4 +21,12 @@ public interface FaCaregiverImageDao {
             AND CRG.STATUS = 1
             """)
     public List<String> getCaregiverPictures(int caregiverId);
+
+    @Insert("""
+        INSERT INTO FA_CAREGIVER_IMAGE
+            (CAREGIVER_ID, IMAGE_ID, TX_HOST, TX_USER, TX_DATE)
+        VALUES
+            (#{caregiverId}, #{imageId}, 'localhost', 'admin', NOW())
+            """)
+    public void uploadPicture(int caregiverId, int imageId);
 }

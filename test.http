@@ -24,15 +24,17 @@ POST http://localhost:8080/api/v1/auth
 Content-Type: application/json
 
 {
-  "email": "crg1@domain.com",
+  "email": "mail12@domain.com",
   "password": "abc123def456"
 }
 
-
 # {
-#   "email": "mail12@domain.com",
+#   "email": "crg1@domain.com",
 #   "password": "abc123def456"
 # }
+
+
+
 
 
 ### create a new dog
@@ -98,3 +100,28 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNCIsInJvb
   "countryId": 332,
   "zone": "test zone"
 }
+
+### upload user details
+POST http://localhost:8080/api/v1/caregivers/bio-details
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3NyIsImlzT3duZXIiOmZhbHNlLCJyb2xlcyI6WyJHRVRfQ0lUSUVTIiwiR0VUX0NPVU5UUklFUyIsIlVQREFURV9QUk9GSUxFIiwiU0VORF9NRVNTQUdFIiwiRklOSVNIX0JPT0tJTkciLCJHRVRfRE9HX0JZX0lEIiwiUkVKRUNUX0JPT0tJTkciLCJDT05GSVJNX0JPT0tJTkciLCJHRVRfQ0FSRUdJVkVSX0JPT0tJTkdTIiwiQUREX0hPVVNFX0RFVEFJTFMiLCJBRERfRVhQRVJJRU5DRSIsIlVQREFURV9OVVJTSU5HIiwiVVBEQVRFX1dBTEtJTkciLCJVUERBVEVfVFJBSU5JTkciLCJVUERBVEVfQk9BUkRJTkciLCJDUkVBVEVfTlVSU0lORyIsIkNSRUFURV9XQUxLSU5HIiwiQ1JFQVRFX1RSQUlOSU5HIiwiQ1JFQVRFX0JPQVJESU5HIiwiVVBEQVRFX0JPT0tJTkciLCJDQU5DRUxfQk9PS0lORyIsIkdFVF9SRVZJRVdTIiwiR0VUX1BST0ZJTEUiLCJHRVRfRE9HUyJdLCJpc3MiOiJmaWVsYW1pZ28iLCJjYXJlZ2l2ZXJJZCI6OSwiZXhwIjoxNjY5MjQxNTIwLCJ1c2VySWQiOjc3fQ.tp863wF8aJu-w9jcR9_kPggiaLiqnwcQrg0LVwCZyKw
+
+{
+  "bio": "bio from http request",
+  "experience": [
+    "http experience 1",
+    "http experience 2",
+    "http experience 3"
+  ],
+  "houseFeatures": [
+    "http house feature 1",
+    "http house feature 2",
+    "http house feature 3"
+  ]
+}
+
+
+### get all caregiver pictures
+GET http://localhost:8080/api/v1/caregivers/9/pictures
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNCIsImZpcnN0TmFtZSI6Ik1vYmlsZSB0ZXN0IDIiLCJsYXN0TmFtZSI6InRlc3RldCIsImlzT3duZXIiOnRydWUsInJvbGVzIjpbIkdFVF9DSVRJRVMiLCJHRVRfQ09VTlRSSUVTIiwiR0VUX0JSRUVEUyIsIlVQREFURV9QUk9GSUxFIiwiU0VORF9NRVNTQUdFIiwiR0VUX0RPR19CWV9JRCIsIkdFVF9PV05FUl9CT09LSU5HUyIsIkFERF9QQVlNRU5UX01FVEhPRCIsIlZJRVdfVkVURVJJTkFSSUVTIiwiQlVZX0lOU1VSQU5DRSIsIkdFVF9JTlNVUkFOQ0VfUExBTlMiLCJHRVRfUkVWSUVXUyIsIkdFVF9QUk9GSUxFIiwiQk9PS19OVVJTSU5HIiwiU0VBUkNIX05VUlNJTkciLCJCT09LX1RSQUlOSU5HIiwiU0VBUkNIX1RSQUlOSU5HIiwiQk9PS19XQUxLSU5HIiwiU0VBUkNIX1dBTEtJTkciLCJCT09LX0JPQVJESU5HIiwiU0VBUkNIX0JPQVJESU5HIiwiQUREX0RPRyIsIkdFVF9ET0dTIl0sImlzcyI6ImZpZWxhbWlnbyIsImNhcmVnaXZlcklkIjotMSwiZXhwIjoxNjY5MjQyMzk0LCJ1c2VySWQiOjM0fQ.OwpMJOUGlELNcXVgjvgOFH6fPyxtxpHm5uJh7YxfmgQ
+

@@ -2,6 +2,7 @@ package com.fielamigo.app.FielAmigo.dao;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,4 +22,11 @@ public interface FaCaregiverDao {
         VALUES (#{caregiverId}, 'localhost', 'admin', NOW())  
             """)
     public void create(int userId);
+    
+    @Update("""
+        UPDATE FA_CAREGIVER
+        SET BIO = #{bio}
+        WHERE CAREGIVER_ID = #{caregiverId}
+            """)
+    public void updateCaregiverBio(int caregiverId, String bio);
 }

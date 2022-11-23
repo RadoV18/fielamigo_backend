@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fielamigo.app.FielAmigo.dao.CaregiverBookingsDao;
 import com.fielamigo.app.FielAmigo.dao.CaregiverCardDao;
@@ -15,13 +16,17 @@ import com.fielamigo.app.FielAmigo.dao.FaBoardingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverExperienceDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverImageDao;
+import com.fielamigo.app.FielAmigo.dao.FaHouseDetailsDao;
+import com.fielamigo.app.FielAmigo.dao.FaImageDao;
 import com.fielamigo.app.FielAmigo.dao.FaNursingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaTrainingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaWalkingServiceDao;
 import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
+import com.fielamigo.app.FielAmigo.dto.BioDetailsReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBookedDateDto;
 import com.fielamigo.app.FielAmigo.entity.CaregiverBookings;
+import com.fielamigo.app.FielAmigo.service.FileStorageService;
 import com.fielamigo.app.FielAmigo.utils.DateCount;
 
 @Service
@@ -36,12 +41,16 @@ public class CaregiverBl {
     private FaCaregiverExperienceDao faCaregiverExperienceDao;
     private FaCaregiverImageDao faCaregiverImageDao;
     private CaregiverBookingsDao caregiverBookingsDao;
+    private FaHouseDetailsDao faHouseDetailsDao;
+    private FileStorageService fileStorageService;
+    private FaImageDao faImageDao;
     
     public CaregiverBl(CaregiverCardDao caregiverCardDao, FaBoardingServiceDao faBoardingServiceDao,
         FaTrainingServiceDao faTrainingServiceDao, FaWalkingServiceDao faWalkingServiceDao,
         FaNursingServiceDao faNursingServiceDao, FaCaregiverDao faCaregiverDao,
         FaCaregiverExperienceDao faCaregiverExperienceDao, FaCaregiverImageDao faCaregiverImageDao,
-        CaregiverBookingsDao caregiverBookingsDao
+        CaregiverBookingsDao caregiverBookingsDao, FaHouseDetailsDao faHouseDetailsDao,
+        FileStorageService fileStorageService, FaImageDao faImageDao
     ) {
         this.caregiverCardDao = caregiverCardDao;
         this.faBoardingServiceDao = faBoardingServiceDao;
@@ -52,6 +61,9 @@ public class CaregiverBl {
         this.faCaregiverExperienceDao = faCaregiverExperienceDao;
         this.faCaregiverImageDao = faCaregiverImageDao;
         this.caregiverBookingsDao = caregiverBookingsDao;
+        this.faHouseDetailsDao = faHouseDetailsDao;
+        this.fileStorageService = fileStorageService;
+        this.faImageDao = faImageDao;
     }
 
     /**
@@ -187,5 +199,27 @@ public class CaregiverBl {
 
         result.setDates(caregiverBookedDates);
         return result;
+    }
+
+    /**
+     * Method to upload the caregiver's bio by his id.
+     * @param caregiverId the id of the caregiver
+     * @param bio the bio of the caregiver
+     */
+    public void uploadBioDetails(int caregiverId, BioDetailsReqDto bio) {
+        this.faCaregiverDao.updateCaregiverBio(caregiverId, bio.getBio());
+        this.faCaregiverExperienceDao.uploadCaregiverExperience(caregiverId, bio.getExperience());
+        this.faHouseDetailsDao.uploadHouseDetails(caregiverId, bio.getHouseFeatures());
+    }
+
+    /**
+     * Method to upload an image of a caregiver by his id.
+     * @param id the id of the caregiver
+     * @param image the image to be uploaded.
+     */
+    public void uploadPicture(int id, MultipartFile image) {
+        String url = fileStorageService.upload(image);
+        int imageId = this.faImageDao.addImage(url);
+        this.faCaregiverImageDao.uploadPicture(id, imageId);
     }
 }
