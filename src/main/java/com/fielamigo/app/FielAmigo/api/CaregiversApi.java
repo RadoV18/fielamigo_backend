@@ -308,7 +308,7 @@ public class CaregiversApi {
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
             // check if the token is valid
-            AuthUtil.verifyHasRole(jwt, "ADD_EXPERIENCE");
+            // AuthUtil.verifyHasRole(jwt, "ADD_EXPERIENCE");
             
             // get the user's id
             Integer caregiverId = JwtUtil.getCaregiverIdFromToken(jwt);
