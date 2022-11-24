@@ -63,10 +63,27 @@ public class BoardingReservationBl {
         return result;
     }
 
+    /**
+     * Cancel a reservation
+    */
     public void cancelReservation(int reservationId) {
         faBoardingReservationDao.CancelReservation(reservationId);
     }
     
+    /**
+     * Mark as a completed reservation
+    */
+    public void completingReservation(int reservationId) {
+        faBoardingReservationDao.CompleteReservation(reservationId);
+    }
+
+    /**
+     * Caregiver accepting reservation
+    */
+    public void acceptingReservation(int reservationId) {
+        faBoardingReservationDao.AcceptReservation(reservationId);
+    }
+
     /**
      * Accepted reservations
      *   

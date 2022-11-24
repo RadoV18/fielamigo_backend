@@ -243,6 +243,67 @@ public class BoardingReservationsApi {
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         }
     }
+
+    /** 
+     * Endpoint to complete a reservation (update bdd)
+     */
+    @GetMapping("/caregiver/toComplete/{boardingReservationId}")
+    public ResponseEntity<ResponseDto<Void>> completingReservation(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable int boardingReservationId
+    ) {
+        ResponseDto<Void> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String token = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(token, "UPDATE_BOARDING");
+            
+            // cancel the booking
+            boardingReservationOwnerBl.completingReservation(boardingReservationId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage("Reserva completada");            
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch(FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    /** 
+     * Endpoint to accept a reservation (update bdd)
+     */
+    @GetMapping("/caregiver/accept/{boardingReservationId}")
+    public ResponseEntity<ResponseDto<Void>> acceptingReservation(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable int boardingReservationId
+    ) {
+        ResponseDto<Void> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String token = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(token, "UPDATE_BOARDING");
+            
+            // cancel the booking
+            boardingReservationOwnerBl.acceptingReservation(boardingReservationId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage("Reserva aceptada");            
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch(FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        }
+    }
+
     /** 
      * Endpoint to show a reservation info 
      */
