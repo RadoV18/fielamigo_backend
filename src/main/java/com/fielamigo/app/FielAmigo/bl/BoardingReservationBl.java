@@ -20,18 +20,6 @@ public class BoardingReservationBl {
         this.faBoardingReservationDao = faBoardingReservationDao;
     }
 
-    /**
-     * @param caregiverId
-     * @return bookings
-     */
-    public List<CaregiverBookingsDto> getBookings(int caregiverId) {
-        final List<CaregiverBookingsDto> bookings = faBoardingReservationDao.showBookings(caregiverId);
-        bookings.forEach(booking -> {
-            booking.setServiceType("Alojamiento");
-        });
-        return bookings;
-    }
-
     public List<OwnerBookingsDto> getOwnerBookings(int userId) {
         List<OwnerBookingsDto> result = new ArrayList<OwnerBookingsDto>();
     
@@ -74,5 +62,137 @@ public class BoardingReservationBl {
 
     public void cancelReservation(int reservationId) {
         faBoardingReservationDao.CancelReservation(reservationId);
+    }
+    
+    /**
+     * Accepted reservations
+     *   
+    */
+    public List<CaregiverBookingsDto> getAcceptedBookings(int userId) {
+        List<CaregiverBookingsDto> result = new ArrayList<CaregiverBookingsDto>();
+    
+        List<OwnerReservations> reservations = faBoardingReservationDao.showAcceptedBookings(userId);
+
+        Map<Integer, CaregiverBookingsDto> reservationMap = new HashMap<>();
+        for (OwnerReservations reservation : reservations) {
+            if(reservationMap.containsKey(reservation.getBoardingReservationId())) {
+                // agregar el perro a lo que ya tienes
+                CaregiverBookingsDto reservationDto = reservationMap.get(reservation.getBoardingReservationId());
+                reservationDto.getDogs().add(new DogSimpleDto(reservation.getDogId(), reservation.getDogName()));
+            } else {
+                // crear el dto y agregarlo al map
+                CaregiverBookingsDto res = new CaregiverBookingsDto();
+                res.setBoardingReservationId(reservation.getBoardingReservationId());
+                res.setCaregiverName(reservation.getCaregiverName());
+                res.setDate(reservation.getDate());
+                res.setReservationStatus(reservation.getReservationStatus());
+                res.setDogs(new ArrayList<>());
+    
+                // crear el perro
+                DogSimpleDto dog = new DogSimpleDto();
+                dog.setDogId(reservation.getDogId());
+                dog.setName(reservation.getDogName());
+    
+                // agregar el perro al dto
+                res.getDogs().add(dog);
+    
+                reservationMap.put(reservation.getBoardingReservationId(), res);
+            }   
+        }
+    
+        result.addAll(reservationMap.values());
+
+        result.forEach(resulta -> {
+            resulta.setServiceType("Alojamiento");
+        });
+        return result;
+    }
+
+    /**
+     * New reservations
+     *   
+    */
+    public List<CaregiverBookingsDto> getNewBookings(int userId) {
+        List<CaregiverBookingsDto> result = new ArrayList<CaregiverBookingsDto>();
+    
+        List<OwnerReservations> reservations = faBoardingReservationDao.showNewBookings(userId);
+
+        Map<Integer, CaregiverBookingsDto> reservationMap = new HashMap<>();
+        for (OwnerReservations reservation : reservations) {
+            if(reservationMap.containsKey(reservation.getBoardingReservationId())) {
+                // agregar el perro a lo que ya tienes
+                CaregiverBookingsDto reservationDto = reservationMap.get(reservation.getBoardingReservationId());
+                reservationDto.getDogs().add(new DogSimpleDto(reservation.getDogId(), reservation.getDogName()));
+            } else {
+                // crear el dto y agregarlo al map
+                CaregiverBookingsDto res = new CaregiverBookingsDto();
+                res.setBoardingReservationId(reservation.getBoardingReservationId());
+                res.setCaregiverName(reservation.getCaregiverName());
+                res.setDate(reservation.getDate());
+                res.setReservationStatus(reservation.getReservationStatus());
+                res.setDogs(new ArrayList<>());
+    
+                // crear el perro
+                DogSimpleDto dog = new DogSimpleDto();
+                dog.setDogId(reservation.getDogId());
+                dog.setName(reservation.getDogName());
+    
+                // agregar el perro al dto
+                res.getDogs().add(dog);
+    
+                reservationMap.put(reservation.getBoardingReservationId(), res);
+            }   
+        }
+    
+        result.addAll(reservationMap.values());
+
+        result.forEach(resulta -> {
+            resulta.setServiceType("Alojamiento");
+        });
+        return result;
+    }
+
+    /**
+     * Completed reservations
+     *   
+    */
+    public List<CaregiverBookingsDto> getCompletedBookings(int userId) {
+        List<CaregiverBookingsDto> result = new ArrayList<CaregiverBookingsDto>();
+    
+        List<OwnerReservations> reservations = faBoardingReservationDao.showCompletedBookings(userId);
+
+        Map<Integer, CaregiverBookingsDto> reservationMap = new HashMap<>();
+        for (OwnerReservations reservation : reservations) {
+            if(reservationMap.containsKey(reservation.getBoardingReservationId())) {
+                // agregar el perro a lo que ya tienes
+                CaregiverBookingsDto reservationDto = reservationMap.get(reservation.getBoardingReservationId());
+                reservationDto.getDogs().add(new DogSimpleDto(reservation.getDogId(), reservation.getDogName()));
+            } else {
+                // crear el dto y agregarlo al map
+                CaregiverBookingsDto res = new CaregiverBookingsDto();
+                res.setBoardingReservationId(reservation.getBoardingReservationId());
+                res.setCaregiverName(reservation.getCaregiverName());
+                res.setDate(reservation.getDate());
+                res.setReservationStatus(reservation.getReservationStatus());
+                res.setDogs(new ArrayList<>());
+    
+                // crear el perro
+                DogSimpleDto dog = new DogSimpleDto();
+                dog.setDogId(reservation.getDogId());
+                dog.setName(reservation.getDogName());
+    
+                // agregar el perro al dto
+                res.getDogs().add(dog);
+    
+                reservationMap.put(reservation.getBoardingReservationId(), res);
+            }   
+        }
+    
+        result.addAll(reservationMap.values());
+
+        result.forEach(resulta -> {
+            resulta.setServiceType("Alojamiento");
+        });
+        return result;
     }
 }

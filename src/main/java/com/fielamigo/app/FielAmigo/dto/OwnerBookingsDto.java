@@ -1,5 +1,4 @@
 package com.fielamigo.app.FielAmigo.dto;
-
 import java.util.List;
 
 public class OwnerBookingsDto {    
