@@ -40,7 +40,7 @@ public class DogBl {
      * @return
      */
     public List<DogUserDto> getDogs(int userId) {
-        return dogUserDao.getDogs(userId);
+        return dogUserDao.getUserDogs(userId);
         
     }
 

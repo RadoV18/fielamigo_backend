@@ -52,7 +52,7 @@ public class DogsApi {
             AuthUtil.verifyHasRole(jwt, "GET_DOGS");
             // get the user id from the token
             int userId = JwtUtil.getUserIdFromToken(jwt);
-
+            System.out.println("userId: " + userId);
             // get the user's dogs
             List<DogUserDto> dogs = dogBl.getDogs(userId);
 

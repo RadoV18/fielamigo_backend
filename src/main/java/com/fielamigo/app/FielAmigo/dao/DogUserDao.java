@@ -35,20 +35,19 @@ public interface DogUserDao {
             FROM FA_DOG_IMAGE DI
             INNER JOIN FA_IMAGE IMG
                 ON DI.IMAGE_ID = IMG.IMAGE_ID
-            WHERE 
+            WHERE
                 DI.STATUS = 1
                 AND IMG.STATUS = 1
         ) AS IM
         ON IM.DOG_ID = D.DOG_ID
         WHERE
             D.USER_ID = #{userId}
-            AND USR.CAT_STATUS IN (1, 2)
-            AND USR.STATUS = 1
             AND D.STATUS = 1
-            AND CB.STATUS = 1
+            AND USR.STATUS = 1
             AND CS.STATUS = 1
+            AND CB.STATUS = 1
             """)
-    public List<DogUserDto> getDogs(int userId);
+    public List<DogUserDto> getUserDogs(int userId);
 
     @Select("""
         SELECT
