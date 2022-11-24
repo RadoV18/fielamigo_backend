@@ -121,7 +121,11 @@ public class CaregiverBl {
      * @param caregiverId the id of the caregiver
      */
     public String getCaregiverBioById(int caregiverId) {
-        return this.faCaregiverDao.getCaregiverBio(caregiverId);
+        String bio = this.faCaregiverDao.getCaregiverBio(caregiverId);
+        if(bio == null){
+            bio = "";
+        }
+        return bio;
     }
 
     /**

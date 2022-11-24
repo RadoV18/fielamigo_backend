@@ -166,11 +166,7 @@ public class CaregiversApi {
 
             responseDto.setSuccessful(true);
             responseDto.setMessage(null);
-            if(bio == null){
-                responseDto.setData("");
-            }else{
-                responseDto.setData(bio);
-            }
+            responseDto.setData(bio);
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (FielAmigoException e) {
