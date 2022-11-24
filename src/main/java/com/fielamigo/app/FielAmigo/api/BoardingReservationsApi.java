@@ -77,7 +77,10 @@ public class BoardingReservationsApi {
         }
     }
 
-    /* Show caregiver completed bookings */
+    /**
+     * 
+     *  Endpoint to show caregiver completed booking 
+     */
 
     @GetMapping("/caregiver")
     public ResponseEntity<ResponseDto<List<CaregiverBookingsDto>>> showBookings(
@@ -107,7 +110,10 @@ public class BoardingReservationsApi {
         }
     }
 
-    /* Show owner all bookings */
+    /**
+     * 
+     *  Endpoint to show caregiver completed booking 
+     */
     
     @GetMapping("/owner")
     public ResponseEntity<ResponseDto<List<OwnerBookingsDto>>> showOwnerBookings(
