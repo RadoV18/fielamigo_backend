@@ -71,6 +71,11 @@ public class BoardingBl {
         List<Pair<Integer, Integer>> possibleCaregivers = availableBoardingCaregiverDao
             .getPossibleCaregivers(dogCount, nights, req.getCityId());
         System.out.println("Possible caregivers: " + possibleCaregivers.size());
+
+        if(possibleCaregivers.size() == 0) {
+            return result;
+        }
+
         for(Pair<Integer, Integer> p : possibleCaregivers) {
             System.out.println("\tCaregiver " + p.getFirst());
         }
