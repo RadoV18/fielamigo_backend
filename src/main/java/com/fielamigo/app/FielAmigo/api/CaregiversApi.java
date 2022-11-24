@@ -152,8 +152,14 @@ public class CaregiversApi {
         try {
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
+
+            // checks whether the user is a caregiver or a client
             // check if the token is valid
-            AuthUtil.verifyHasRole(jwt, "SEARCH_BOARDING");
+            if(JwtUtil.getCaregiverIdFromToken(jwt) == -1){
+               AuthUtil.verifyHasRole(jwt, "SEARCH_BOARDING");
+            }else{
+                AuthUtil.verifyHasRole(jwt, "CREATE_BOARDING");
+            }
             
             // get the caregiver's bio
             String bio = caregiverBl.getCaregiverBioById(caregiverId);
