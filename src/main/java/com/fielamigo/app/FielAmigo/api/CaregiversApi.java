@@ -76,6 +76,12 @@ public class CaregiversApi {
             // get the available caregivers
             List<Integer> caregivers = boardingBl.getAvailableCaregivers(req);
 
+            if(caregivers.size() == 0) {
+                responseDto.setMessage("No caregivers available");
+                responseDto.setSuccessful(false);
+                return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            }
+
             // get the caregivers' info
             List<CaregiverCardDto> caregiversInfo = caregiverBl.getCaregiversInfo(caregivers);
 
