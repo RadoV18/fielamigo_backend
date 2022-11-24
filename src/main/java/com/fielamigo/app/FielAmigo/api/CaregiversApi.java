@@ -24,6 +24,7 @@ import com.fielamigo.app.FielAmigo.dto.BioDetailsReqDto;
 import com.fielamigo.app.FielAmigo.dto.BoardingServiceDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBoardingReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
+import com.fielamigo.app.FielAmigo.dto.CaregiverInfoDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
 import com.fielamigo.app.FielAmigo.dto.MessagDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBookedDateDto;
@@ -151,15 +152,25 @@ public class CaregiversApi {
         try {
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
+
+            // checks whether the user is a caregiver or a client
             // check if the token is valid
-            AuthUtil.verifyHasRole(jwt, "SEARCH_BOARDING");
+            if(JwtUtil.getCaregiverIdFromToken(jwt) == -1){
+               AuthUtil.verifyHasRole(jwt, "SEARCH_BOARDING");
+            }else{
+                AuthUtil.verifyHasRole(jwt, "CREATE_BOARDING");
+            }
             
             // get the caregiver's bio
             String bio = caregiverBl.getCaregiverBioById(caregiverId);
 
             responseDto.setSuccessful(true);
             responseDto.setMessage(null);
-            responseDto.setData(bio);
+            if(bio == null){
+                responseDto.setData("");
+            }else{
+                responseDto.setData(bio);
+            }
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (FielAmigoException e) {
@@ -424,4 +435,37 @@ public class CaregiversApi {
         }
     }
 
+    /**
+     *  Endpoint to show caregiver info given its id
+     * @param headers the request headers.
+     * @request caregiverId  
+     * */ 
+    @GetMapping("/caregivers/{caregiverId}")
+    public ResponseEntity<ResponseDto<CaregiverInfoDto>> getCaregiverInfo (
+        @RequestHeader Map<String, String> headers,
+        @PathVariable Integer caregiverId
+    ) {
+        ResponseDto<CaregiverInfoDto> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(jwt, "GET_PROFILE");
+
+            CaregiverInfoDto caregiverInfo = caregiverBl.getCaregiverInfo(caregiverId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage(null);
+            responseDto.setData(caregiverInfo);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 }

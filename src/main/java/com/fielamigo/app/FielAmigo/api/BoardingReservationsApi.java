@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -77,10 +78,13 @@ public class BoardingReservationsApi {
         }
     }
 
-    /* Show caregiver completed bookings */
+    /**
+     * 
+     *  Endpoint to show caregiver accepted bookings 
+     */
 
-    @GetMapping("/caregiver")
-    public ResponseEntity<ResponseDto<List<CaregiverBookingsDto>>> showBookings(
+    @GetMapping("/caregiver/accepted")
+    public ResponseEntity<ResponseDto<List<CaregiverBookingsDto>>> showAcceptedBookings(
         @RequestHeader Map<String, String> headers
     ) {
         ResponseDto<List<CaregiverBookingsDto>> responseDto = new ResponseDto<>(null, null, false);
@@ -93,7 +97,7 @@ public class BoardingReservationsApi {
             int caregiverId = JwtUtil.getUserIdFromToken(token);
 
             // get the bookings
-            List<CaregiverBookingsDto> bookings = boardingReservationBl.getBookings(caregiverId);
+            List<CaregiverBookingsDto> bookings = boardingReservationBl.getAcceptedBookings(caregiverId);
 
             responseDto.setData(bookings);
             responseDto.setSuccessful(true);
@@ -107,7 +111,77 @@ public class BoardingReservationsApi {
         }
     }
 
-    /* Show owner all bookings */
+
+    /**
+     * 
+     *  Endpoint to show caregiver new bookings 
+     */
+
+    @GetMapping("/caregiver/new")
+    public ResponseEntity<ResponseDto<List<CaregiverBookingsDto>>> showNewBookings(
+        @RequestHeader Map<String, String> headers
+    ) {
+        ResponseDto<List<CaregiverBookingsDto>> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String token = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(token, "GET_CAREGIVER_BOOKINGS");
+            // get the user id from the token
+            int caregiverId = JwtUtil.getUserIdFromToken(token);
+
+            // get the bookings
+            List<CaregiverBookingsDto> bookings = boardingReservationBl.getNewBookings(caregiverId);
+
+            responseDto.setData(bookings);
+            responseDto.setSuccessful(true);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch(FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    /**
+     * 
+     *  Endpoint to show caregiver completed bookings 
+     */
+
+    @GetMapping("/caregiver/completed")
+    public ResponseEntity<ResponseDto<List<CaregiverBookingsDto>>> showCompletedBookings(
+        @RequestHeader Map<String, String> headers
+    ) {
+        ResponseDto<List<CaregiverBookingsDto>> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String token = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(token, "GET_CAREGIVER_BOOKINGS");
+            // get the user id from the token
+            int caregiverId = JwtUtil.getUserIdFromToken(token);
+
+            // get the bookings
+            List<CaregiverBookingsDto> bookings = boardingReservationBl.getCompletedBookings(caregiverId);
+
+            responseDto.setData(bookings);
+            responseDto.setSuccessful(true);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch(FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        }
+    }
+
+    /**
+     * 
+     *  Endpoint to show caregiver completed bookings 
+     */
     
     @GetMapping("/owner")
     public ResponseEntity<ResponseDto<List<OwnerBookingsDto>>> showOwnerBookings(
@@ -137,4 +211,33 @@ public class BoardingReservationsApi {
         }
     }
     
+    /** 
+     * Endpoint to cancel a reservation (update bdd)
+     */
+    @GetMapping("/owner/cancel/{boardingReservationId}")
+    public ResponseEntity<ResponseDto<Void>> cancelBooking(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable int boardingReservationId
+    ) {
+        ResponseDto<Void> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String token = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(token, "GET_OWNER_BOOKINGS");
+            
+            // cancel the booking
+            boardingReservationOwnerBl.cancelReservation(boardingReservationId);
+
+            responseDto.setSuccessful(true);
+            responseDto.setMessage("Reserva cancelada");            
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch(FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        }
+    }    
 }

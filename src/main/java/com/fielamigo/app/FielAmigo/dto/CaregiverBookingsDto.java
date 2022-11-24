@@ -1,19 +1,35 @@
 package com.fielamigo.app.FielAmigo.dto;
+import java.util.List;
 
-public class CaregiverBookingsDto {
+public class CaregiverBookingsDto {    
+    private Integer boardingReservationId;
     private String serviceType;
-    private String dogName;
+    private Integer dogId;
+    private List<DogSimpleDto> dogs;
     private String caregiverName;
     private String date;
+    private String reservationStatus;
 
     public CaregiverBookingsDto() {
     }
 
-    public CaregiverBookingsDto(String serviceType, String dogName, String caregiverName, String date) {
+    public CaregiverBookingsDto(Integer boardingReservationId, String serviceType, Integer dogId,
+            List<DogSimpleDto> dogs, String caregiverName, String date, String reservationStatus) {
+        this.boardingReservationId = boardingReservationId;
         this.serviceType = serviceType;
-        this.dogName = dogName;
+        this.dogId = dogId;
+        this.dogs = dogs;
         this.caregiverName = caregiverName;
         this.date = date;
+        this.reservationStatus = reservationStatus;
+    }
+
+    public Integer getBoardingReservationId() {
+        return boardingReservationId;
+    }
+
+    public void setBoardingReservationId(Integer boardingReservationId) {
+        this.boardingReservationId = boardingReservationId;
     }
 
     public String getServiceType() {
@@ -24,12 +40,20 @@ public class CaregiverBookingsDto {
         this.serviceType = serviceType;
     }
 
-    public String getDogName() {
-        return dogName;
+    public Integer getDogId() {
+        return dogId;
     }
 
-    public void setDogName(String dogName) {
-        this.dogName = dogName;
+    public void setDogId(Integer dogId) {
+        this.dogId = dogId;
+    }
+
+    public List<DogSimpleDto> getDogs() {
+        return dogs;
+    }
+
+    public void setDogs(List<DogSimpleDto> dogs) {
+        this.dogs = dogs;
     }
 
     public String getCaregiverName() {
@@ -48,9 +72,18 @@ public class CaregiverBookingsDto {
         this.date = date;
     }
 
+    public String getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(String reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
     @Override
     public String toString() {
-        return "CaregiverBookingsDto [serviceType=" + serviceType + ", dogName=" + dogName + ", caregiverName="
-                + caregiverName + ", date=" + date + "]";
+        return "CaregiverBookingsDto [boardingReservationId=" + boardingReservationId + ", serviceType=" + serviceType
+                + ", dogId=" + dogId + ", dogs=" + dogs + ", caregiverName=" + caregiverName + ", date=" + date
+                + ", reservationStatus=" + reservationStatus + "]";
     }
 }

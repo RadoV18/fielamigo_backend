@@ -1,24 +1,21 @@
-package com.fielamigo.app.FielAmigo.dto;
-import java.util.List;
+package com.fielamigo.app.FielAmigo.entity;
 
-public class OwnerBookingsDto {    
+public class OwnerReservations {
     private Integer boardingReservationId;
-    private String serviceType;
     private String dogId;
-    private List<DogSimpleDto> dogs;
-    private String caregiverName;   
+    private String dogName;
+    private String caregiverName;
     private String date;
-    private String reservationStatus;
-
-    public OwnerBookingsDto() {
+    private String reservationStatus; 
+    
+    public OwnerReservations() {
     }
-
-    public OwnerBookingsDto(Integer boardingReservationId, String serviceType, String dogId, List<DogSimpleDto> dogs,
+    
+    public OwnerReservations(Integer boardingReservationId, String dogId, String dogName,
             String caregiverName, String date, String reservationStatus) {
         this.boardingReservationId = boardingReservationId;
-        this.serviceType = serviceType;
         this.dogId = dogId;
-        this.dogs = dogs;
+        this.dogName = dogName;
         this.caregiverName = caregiverName;
         this.date = date;
         this.reservationStatus = reservationStatus;
@@ -32,14 +29,6 @@ public class OwnerBookingsDto {
         this.boardingReservationId = boardingReservationId;
     }
 
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
     public String getDogId() {
         return dogId;
     }
@@ -48,12 +37,12 @@ public class OwnerBookingsDto {
         this.dogId = dogId;
     }
 
-    public List<DogSimpleDto> getDogs() {
-        return dogs;
+    public String getDogName() {
+        return dogName;
     }
 
-    public void setDogs(List<DogSimpleDto> dogs) {
-        this.dogs = dogs;
+    public void setDogName(String dogName) {
+        this.dogName = dogName;
     }
 
     public String getCaregiverName() {
@@ -82,8 +71,9 @@ public class OwnerBookingsDto {
 
     @Override
     public String toString() {
-        return "OwnerBookingsDto [boardingReservationId=" + boardingReservationId + ", serviceType=" + serviceType
-                + ", dogId=" + dogId + ", dogs=" + dogs + ", caregiverName=" + caregiverName + ", date=" + date
+        return "OwnerReservations [boardingReservationId=" + boardingReservationId
+                + ", dogId=" + dogId + ", dogName=" + dogName + ", caregiverName=" + caregiverName + ", date=" + date
                 + ", reservationStatus=" + reservationStatus + "]";
     }    
 }
+

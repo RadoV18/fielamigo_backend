@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fielamigo.app.FielAmigo.dao.CaregiverBookingsDao;
 import com.fielamigo.app.FielAmigo.dao.CaregiverCardDao;
+import com.fielamigo.app.FielAmigo.dao.CaregiverInfoDao;
 import com.fielamigo.app.FielAmigo.dao.FaBoardingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverDao;
 import com.fielamigo.app.FielAmigo.dao.FaCaregiverExperienceDao;
@@ -22,6 +23,7 @@ import com.fielamigo.app.FielAmigo.dao.FaNursingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaTrainingServiceDao;
 import com.fielamigo.app.FielAmigo.dao.FaWalkingServiceDao;
 import com.fielamigo.app.FielAmigo.dto.CaregiverCardDto;
+import com.fielamigo.app.FielAmigo.dto.CaregiverInfoDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverServiceDto;
 import com.fielamigo.app.FielAmigo.dto.BioDetailsReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBookedDateDto;
@@ -31,7 +33,6 @@ import com.fielamigo.app.FielAmigo.utils.DateCount;
 
 @Service
 public class CaregiverBl {
-
     private CaregiverCardDao caregiverCardDao;
     private FaBoardingServiceDao faBoardingServiceDao;
     private FaTrainingServiceDao faTrainingServiceDao;
@@ -44,13 +45,15 @@ public class CaregiverBl {
     private FaHouseDetailsDao faHouseDetailsDao;
     private FileStorageService fileStorageService;
     private FaImageDao faImageDao;
-    
+    private CaregiverInfoDao faCaregiverInfoDao;
+
     public CaregiverBl(CaregiverCardDao caregiverCardDao, FaBoardingServiceDao faBoardingServiceDao,
         FaTrainingServiceDao faTrainingServiceDao, FaWalkingServiceDao faWalkingServiceDao,
         FaNursingServiceDao faNursingServiceDao, FaCaregiverDao faCaregiverDao,
         FaCaregiverExperienceDao faCaregiverExperienceDao, FaCaregiverImageDao faCaregiverImageDao,
         CaregiverBookingsDao caregiverBookingsDao, FaHouseDetailsDao faHouseDetailsDao,
         FileStorageService fileStorageService, FaImageDao faImageDao
+        ,CaregiverInfoDao faCaregiverInfoDao
     ) {
         this.caregiverCardDao = caregiverCardDao;
         this.faBoardingServiceDao = faBoardingServiceDao;
@@ -64,6 +67,7 @@ public class CaregiverBl {
         this.faHouseDetailsDao = faHouseDetailsDao;
         this.fileStorageService = fileStorageService;
         this.faImageDao = faImageDao;
+        this.faCaregiverInfoDao = faCaregiverInfoDao;
     }
 
     /**
@@ -229,5 +233,14 @@ public class CaregiverBl {
      */
     public List<String> getHouseDetails(int id) {
         return this.faHouseDetailsDao.getHouseDetails(id);
+    }
+
+    /** 
+     * @param caregiverId
+     * @return info 
+     */
+    public CaregiverInfoDto getCaregiverInfo(Integer caregiverId) {
+        final CaregiverInfoDto info = faCaregiverInfoDao.caregiverInfoDto(caregiverId);
+        return info;
     }
 }
