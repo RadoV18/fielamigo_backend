@@ -79,7 +79,8 @@ public interface CaregiverCardDao {
             RES.RESERVATION_COUNT,
             CITY,
             USR_ADD.ZONE,
-            PRICE;
+            PRICE,
+            PICKUP_RATE
         </script>""")
     public List<CaregiverCardDto> getCaregiversInfo(int[] caregivers);
 }

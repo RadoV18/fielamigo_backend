@@ -108,18 +108,14 @@ Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3NyIsImlzT3duZXIiOmZhbHNlLCJyb2xlcyI6WyJHRVRfQ0lUSUVTIiwiR0VUX0NPVU5UUklFUyIsIlVQREFURV9QUk9GSUxFIiwiU0VORF9NRVNTQUdFIiwiRklOSVNIX0JPT0tJTkciLCJHRVRfRE9HX0JZX0lEIiwiUkVKRUNUX0JPT0tJTkciLCJDT05GSVJNX0JPT0tJTkciLCJHRVRfQ0FSRUdJVkVSX0JPT0tJTkdTIiwiQUREX0hPVVNFX0RFVEFJTFMiLCJBRERfRVhQRVJJRU5DRSIsIlVQREFURV9OVVJTSU5HIiwiVVBEQVRFX1dBTEtJTkciLCJVUERBVEVfVFJBSU5JTkciLCJVUERBVEVfQk9BUkRJTkciLCJDUkVBVEVfTlVSU0lORyIsIkNSRUFURV9XQUxLSU5HIiwiQ1JFQVRFX1RSQUlOSU5HIiwiQ1JFQVRFX0JPQVJESU5HIiwiVVBEQVRFX0JPT0tJTkciLCJDQU5DRUxfQk9PS0lORyIsIkdFVF9SRVZJRVdTIiwiR0VUX1BST0ZJTEUiLCJHRVRfRE9HUyJdLCJpc3MiOiJmaWVsYW1pZ28iLCJjYXJlZ2l2ZXJJZCI6OSwiZXhwIjoxNjY5MzE0OTY2LCJ1c2VySWQiOjc3fQ.la2VpgCSbmrUOCF7EbyWIvzO-QqCZ1psMCbeGzUaxng
 
 {
-  "bio": "bio from http request",
-  "experience": [
-    "http experience 1",
-    "http experience 2",
-    "http experience 3"
-  ],
-  "houseFeatures": [
-    "http house feature 1",
-    "http house feature 2",
-    "http house feature 3"
-  ]
+    "bio":"Biografiatttt",
+    "experience":[
+      "tengo hambre",
+      "tengo sueño"
+    ],
+    "houseFeatures":["Es chiquita"]
 }
+
 
 
 ### get all caregiver pictures
