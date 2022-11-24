@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
+import com.fielamigo.app.FielAmigo.dto.DogResDto;
 import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 
 @Component
@@ -83,4 +84,43 @@ public interface DogUserDao {
             AND IM.STATUS = 1
             """)
     public List<DogUserDto> getDogsByCaregiverId(int caregiverId);
+
+    @Select("""
+        SELECT
+            D.DOG_ID,
+            D.NAME,
+            D.IS_MALE,
+            D.IS_STERILIZED,
+            D.NOTES,
+            D.BIRTH_DATE,
+            CS.NAME AS SIZE,
+            CB.NAME AS BREED,
+            IMAGE.URL AS IMAGE_URL
+        FROM FA_DOG D
+        -- Image
+        LEFT JOIN (
+            SELECT
+                DI.DOG_ID,
+                IMG.URL
+            FROM FA_DOG_IMAGE DI
+            INNER JOIN FA_IMAGE IMG
+                ON DI.IMAGE_ID = IMG.IMAGE_ID
+            WHERE
+                DI.STATUS = 1
+                AND IMG.STATUS = 1
+        ) AS IMAGE
+        ON IMAGE.DOG_ID = D.DOG_ID
+        -- Size
+        INNER JOIN FA_CATALOG CS
+            ON D.CAT_SIZE = CS.CATALOG_ID
+        -- Breed
+        INNER JOIN FA_CATALOG CB
+            ON D.CAT_BREED = CB.CATALOG_ID
+        WHERE
+            D.DOG_ID = #{dogId}
+            AND D.STATUS = 1
+            AND CS.STATUS = 1
+            AND CB.STATUS = 1    
+            """)
+    public DogResDto getDogById(int dogId);
 }

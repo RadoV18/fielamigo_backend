@@ -10,6 +10,7 @@ import com.fielamigo.app.FielAmigo.dao.FaDogDao;
 import com.fielamigo.app.FielAmigo.dao.FaDogImageDao;
 import com.fielamigo.app.FielAmigo.dao.FaImageDao;
 import com.fielamigo.app.FielAmigo.dto.DogDto;
+import com.fielamigo.app.FielAmigo.dto.DogResDto;
 import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 import com.fielamigo.app.FielAmigo.entity.FaDog;
 import com.fielamigo.app.FielAmigo.service.S3FileStorageServiceImpl;
@@ -72,5 +73,12 @@ public class DogBl {
         String imageUrl = s3FileStorageService.upload(image);
         int imageId = faImageDao.addImage(imageUrl);
         faDogImageDao.addDogImage(dogId, imageId);
+    }
+
+    /**
+     * Method that a returns a DogUserDto by the dog id.
+     */
+    public DogResDto getDogById(int dogId) {
+        return dogUserDao.getDogById(dogId);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fielamigo.app.FielAmigo.bl.DogBl;
 import com.fielamigo.app.FielAmigo.dto.DogDto;
+import com.fielamigo.app.FielAmigo.dto.DogResDto;
 import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 import com.fielamigo.app.FielAmigo.dto.ResponseDto;
 import com.fielamigo.app.FielAmigo.utils.AuthUtil;
@@ -142,4 +143,44 @@ public class DogsApi {
             return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
         }
     }  
+
+    /**
+     * Endpoint to get a dog by its id.
+     */
+    @GetMapping("/{dogId}")
+    public ResponseEntity<ResponseDto<DogResDto>> getDogById(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable("dogId") Integer dogId
+    ) {
+        ResponseDto<DogResDto> responseDto = new ResponseDto<>(null, null, false);
+
+        try {
+            // check if the user has a token
+            String jwt = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            // AuthUtil.verifyHasRole(jwt, "GET_DOGS");
+
+            // get the dog
+            DogResDto dog = dogBl.getDogById(dogId);
+
+            if(dog == null) {
+                responseDto.setMessage("Dog not found");
+                responseDto.setSuccessful(false);
+                return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
+            }
+
+            responseDto.setData(dog);
+            responseDto.setSuccessful(true);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+        } catch (FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            responseDto.setSuccessful(false);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            responseDto.setSuccessful(false);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
 }

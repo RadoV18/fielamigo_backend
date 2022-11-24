@@ -14,13 +14,17 @@ public interface CaregiverCardDao {
     @Select("""
         <script>
         SELECT
-        CRG.CAREGIVER_ID AS CAREGIVER_ID, IMAGE.URL AS IMAGE_URL,
-        USR_DET.FIRST_NAME, USR_DET.LAST_NAME,
-        COALESCE(RES.RESERVATION_COUNT, 0),
-        COALESCE(AVG(REV.RATING), 0) AS RATING,
-        COALESCE(COUNT(REV.REVIEW_ID), 0) AS REVIEW_COUNT,
-        CAT_C.NAME AS CITY, USR_ADD.ZONE, BRD.NIGHTLY_RATE AS PRICE,
-        BRD.PICKUP_RATE
+            BRD.BOARDING_SERVICE_ID,
+            CRG.CAREGIVER_ID AS CAREGIVER_ID,
+            IMAGE.URL AS IMAGE_URL,
+            USR_DET.FIRST_NAME,
+            USR_DET.LAST_NAME,
+            COALESCE(RES.RESERVATION_COUNT, 0),
+            COALESCE(AVG(REV.RATING), 0) AS RATING,
+            COALESCE(COUNT(REV.REVIEW_ID), 0) AS REVIEW_COUNT,
+            CAT_C.NAME AS CITY, USR_ADD.ZONE,
+            BRD.NIGHTLY_RATE AS PRICE,
+            BRD.PICKUP_RATE
         FROM FA_CAREGIVER CRG
         INNER JOIN FA_USER USR
             ON CRG.USER_ID = USR.USER_ID
@@ -71,7 +75,8 @@ public interface CaregiverCardDao {
             <foreach item="id" index="index" collection="caregivers" open="(" separator="," close=")">
                 #{id}
             </foreach>    
-        GROUP BY USR.USER_ID,
+        GROUP BY BRD.BOARDING_SERVICE_ID,
+            USR.USER_ID,
             CRG.CAREGIVER_ID,
             IMAGE_URL,
             USR_DET.FIRST_NAME,

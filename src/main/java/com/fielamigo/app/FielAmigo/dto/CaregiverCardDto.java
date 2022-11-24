@@ -1,6 +1,7 @@
 package com.fielamigo.app.FielAmigo.dto;
 
 public class CaregiverCardDto {
+    private Integer boardingServiceId;
     private Integer caregiverId;
     private String firstName;
     private String lastName;
@@ -16,8 +17,10 @@ public class CaregiverCardDto {
     public CaregiverCardDto() {
     }
 
-    public CaregiverCardDto(Integer caregiverId, String firstName, String lastName, String imageUrl, String zone, String city,
-            Integer reviewCount, Double rating, Double price, Double pickupRate, boolean isVerified) {
+    public CaregiverCardDto(Integer boardingServiceId, Integer caregiverId, String firstName, String lastName,
+        String imageUrl, String zone, String city,  Integer reviewCount, Double rating,
+        Double price, Double pickupRate, boolean isVerified
+    ) {
         this.caregiverId = caregiverId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -29,6 +32,14 @@ public class CaregiverCardDto {
         this.price = price;
         this.pickupRate = pickupRate;
         this.isVerified = isVerified;
+    }
+
+    public Integer getBoardingServiceId() {
+        return boardingServiceId;
+    }
+
+    public void setBoardingServiceId(Integer boardingServiceId) {
+        this.boardingServiceId = boardingServiceId;
     }
 
     public Integer getCaregiverId() {
@@ -121,10 +132,10 @@ public class CaregiverCardDto {
 
     @Override
     public String toString() {
-        return "CaregiverCardDto [caregiverId=" + caregiverId + ", firstName=" + firstName + ", lastName=" + lastName
-                + ", imageUrl=" + imageUrl + ", zone=" + zone + ", city=" + city + ", reviewCount=" + reviewCount
-                + ", rating=" + rating + ", price=" + price + ", pickupRate=" + pickupRate + ", isVerified="
-                + isVerified + "]";
+        return "CaregiverCardDto [boardingServiceId=" + boardingServiceId + ", caregiverId=" + caregiverId
+                + ", firstName=" + firstName + ", lastName=" + lastName + ", imageUrl=" + imageUrl + ", zone=" + zone
+                + ", city=" + city + ", reviewCount=" + reviewCount + ", rating=" + rating + ", price=" + price
+                + ", pickupRate=" + pickupRate + ", isVerified=" + isVerified + "]";
     }
 
 }
