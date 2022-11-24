@@ -216,8 +216,14 @@ public class CaregiverBl {
      */
     public void uploadBioDetails(int caregiverId, BioDetailsReqDto bio) {
         this.faCaregiverDao.updateCaregiverBio(caregiverId, bio.getBio());
-        this.faCaregiverExperienceDao.uploadCaregiverExperience(caregiverId, bio.getExperience());
-        this.faHouseDetailsDao.uploadHouseDetails(caregiverId, bio.getHouseFeatures());
+        List<String> experience = bio.getExperience();
+        List<String> houseFeatures = bio.getHouseFeatures();
+        if(!experience.isEmpty()){
+            this.faCaregiverExperienceDao.uploadCaregiverExperience(caregiverId, bio.getExperience());
+        }
+        if(!houseFeatures.isEmpty()){
+            this.faHouseDetailsDao.uploadHouseDetails(caregiverId, bio.getHouseFeatures());
+        }   
     }
 
     /**
