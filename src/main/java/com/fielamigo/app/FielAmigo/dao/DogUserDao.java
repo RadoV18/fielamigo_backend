@@ -9,7 +9,7 @@ import com.fielamigo.app.FielAmigo.dto.DogUserDto;
 
 @Component
 public interface DogUserDao {
-    // TODO: test if a dog without a picture is returned
+
     @Select("""
         SELECT
             D.DOG_ID,
@@ -27,10 +27,18 @@ public interface DogUserDao {
             ON D.CAT_BREED = CB.CATALOG_ID
         INNER JOIN FA_CATALOG CS
             ON D.CAT_SIZE = CS.CATALOG_ID
-        INNER JOIN FA_DOG_IMAGE DI
-            ON D.DOG_ID = DI.DOG_ID
-        INNER JOIN FA_IMAGE IM
-            ON DI.IMAGE_ID = IM.IMAGE_ID
+        LEFT JOIN (
+            SELECT
+                DI.DOG_ID,
+                IMG.URL
+            FROM FA_DOG_IMAGE DI
+            INNER JOIN FA_IMAGE IMG
+                ON DI.IMAGE_ID = IMG.IMAGE_ID
+            WHERE 
+                DI.STATUS = 1
+                AND IMG.STATUS = 1
+        ) AS IM
+        ON IM.DOG_ID = D.DOG_ID
         WHERE
             D.USER_ID = #{userId}
             AND USR.CAT_STATUS IN (1, 2)
@@ -38,8 +46,6 @@ public interface DogUserDao {
             AND D.STATUS = 1
             AND CB.STATUS = 1
             AND CS.STATUS = 1
-            AND DI.STATUS = 1
-            AND IM.STATUS = 1
             """)
     public List<DogUserDto> getDogs(int userId);
 

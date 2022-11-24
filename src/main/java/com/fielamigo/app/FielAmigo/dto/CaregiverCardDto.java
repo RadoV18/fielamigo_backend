@@ -10,13 +10,14 @@ public class CaregiverCardDto {
     private Integer reviewCount;
     private Double rating;
     private Double price;
+    private Double pickupRate;
     private boolean isVerified;
 
     public CaregiverCardDto() {
     }
 
     public CaregiverCardDto(Integer caregiverId, String firstName, String lastName, String imageUrl, String zone, String city,
-            Integer reviewCount, Double rating, Double price, boolean isVerified) {
+            Integer reviewCount, Double rating, Double price, Double pickupPrice, boolean isVerified) {
         this.caregiverId = caregiverId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,6 +27,7 @@ public class CaregiverCardDto {
         this.reviewCount = reviewCount;
         this.rating = rating;
         this.price = price;
+        this.pickupRate = pickupPrice;
         this.isVerified = isVerified;
     }
 
@@ -101,6 +103,14 @@ public class CaregiverCardDto {
         this.price = price;
     }
 
+    public Double getPickupPrice() {
+        return pickupRate;
+    }
+
+    public void setPickupPrice(Double pickupPrice) {
+        this.pickupRate = pickupPrice;
+    }
+
     public boolean getIsVerified() {
         return isVerified;
     }
@@ -113,7 +123,8 @@ public class CaregiverCardDto {
     public String toString() {
         return "CaregiverCardDto [caregiverId=" + caregiverId + ", firstName=" + firstName + ", lastName=" + lastName
                 + ", imageUrl=" + imageUrl + ", zone=" + zone + ", city=" + city + ", reviewCount=" + reviewCount
-                + ", rating=" + rating + ", price=" + price + ", isVerified=" + isVerified + "]";
+                + ", rating=" + rating + ", price=" + price + ", pickupPrice=" + pickupRate + ", isVerified="
+                + isVerified + "]";
     }
 
 }
