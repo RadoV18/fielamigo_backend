@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
+
 import com.fielamigo.app.FielAmigo.entity.FaBoardingReservation;
 import com.fielamigo.app.FielAmigo.entity.OwnerReservations;
+import com.fielamigo.app.FielAmigo.entity.ReservationInfoEntity;
 
 @Component
 public interface FaBoardingReservationDao {
@@ -98,6 +100,36 @@ public interface FaBoardingReservationDao {
                     and c.caregiver_id = #{caregiverId};
             """)
     public List<OwnerReservations> showCompletedBookings(int caregiverId);
+
+    /**
+     * Reservation Info
+     * @param boardingReservationId
+     * @return
+      */
+      @Select("""
+            select 
+                r.boarding_reservation_id  as boardingReservationId,
+                d.dog_id as dogId,
+                d.name as dogName, 
+                d.cat_breed as breed, 
+                d.cat_size as size, 
+                d.birth_date as birthDate, 
+                r.starting_date as startDate, 
+                r.ending_date as endDate, 
+                r.nightly_rate as nightlyRate, 
+                r.include_pickup as includePickup, 
+                r.pickup_rate as pickupRate, 
+                r.notes as notes,
+                (fua.address_1 || ', ' || fua.address_2) as location
+                from FA_boarding_reservation r
+                inner join FA_dog_boarding db on r.boarding_reservation_id = db.boarding_reservation_id
+                inner join FA_dog d on db.dog_id = d.dog_id
+                inner join fa_user fu on  fu.user_id  = d.user_id
+                inner join fa_user_address fua on fua.user_id  = fu.user_id 
+                inner join fa_boarding_service fbs on fbs.caregiver_id = 2
+                where r.boarding_reservation_id = 1;
+            """)
+    public ReservationInfoEntity showBookingInfo(int boardingReservationId);
 
     /**
      * 

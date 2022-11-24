@@ -18,6 +18,7 @@ import com.fielamigo.app.FielAmigo.bl.BoardingReservationBl;
 import com.fielamigo.app.FielAmigo.dto.BoardingReservationReqDto;
 import com.fielamigo.app.FielAmigo.dto.CaregiverBookingsDto;
 import com.fielamigo.app.FielAmigo.dto.OwnerBookingsDto;
+import com.fielamigo.app.FielAmigo.dto.ReservationInfoDto;
 import com.fielamigo.app.FielAmigo.dto.ResponseDto;
 import com.fielamigo.app.FielAmigo.utils.AuthUtil;
 import com.fielamigo.app.FielAmigo.utils.FielAmigoException;
@@ -31,11 +32,13 @@ public class BoardingReservationsApi {
     private BoardingBl boardingBl;
     private BoardingReservationBl boardingReservationBl;
     private BoardingReservationBl boardingReservationOwnerBl;
+    private BoardingReservationBl boardingReservationInfoBl;
 
-    public BoardingReservationsApi(BoardingBl bookingBl, BoardingReservationBl boardingReservationBl,BoardingReservationBl boardingReservationOwnerBl) {
+    public BoardingReservationsApi(BoardingBl bookingBl, BoardingReservationBl boardingReservationBl,BoardingReservationBl boardingReservationOwnerBl,BoardingReservationBl boardingReservationInfoBl) {
         this.boardingBl = bookingBl;
         this.boardingReservationBl = boardingReservationBl;
         this.boardingReservationOwnerBl = boardingReservationOwnerBl;
+        this.boardingReservationInfoBl = boardingReservationInfoBl;
     }
     
     /**
@@ -231,6 +234,36 @@ public class BoardingReservationsApi {
 
             responseDto.setSuccessful(true);
             responseDto.setMessage("Reserva cancelada");            
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } catch(FielAmigoException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            responseDto.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        }
+    }
+    /** 
+     * Endpoint to show a reservation info 
+     */
+    @GetMapping("/caregiver/booking/info/{boardingReservationId}")
+    public ResponseEntity<ResponseDto<ReservationInfoDto>> reservationInfo(
+        @RequestHeader Map<String, String> headers,
+        @PathVariable int boardingReservationId
+    ) {
+        ResponseDto<ReservationInfoDto> responseDto = new ResponseDto<>(null, null, false);
+        try {
+            // check if the user has a token
+            String token = JwtUtil.getTokenFromHeader(headers);
+            // check if the token is valid
+            AuthUtil.verifyHasRole(token, "GET_CAREGIVER_BOOKINGS");
+            // get the user id from the token
+
+            ReservationInfoDto booking = boardingReservationInfoBl.getBookingInfo(boardingReservationId);
+
+            responseDto.setData((ReservationInfoDto) booking);
+            responseDto.setSuccessful(true);
+            responseDto.setMessage("Info");            
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch(FielAmigoException e) {
             responseDto.setMessage(e.getMessage());
