@@ -33,7 +33,6 @@ import com.fielamigo.app.FielAmigo.utils.DateCount;
 
 @Service
 public class CaregiverBl {
-
     private CaregiverCardDao caregiverCardDao;
     private FaBoardingServiceDao faBoardingServiceDao;
     private FaTrainingServiceDao faTrainingServiceDao;

@@ -3,6 +3,7 @@ package com.fielamigo.app.FielAmigo.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
 import com.fielamigo.app.FielAmigo.dto.CaregiverBookingsDto;
@@ -79,7 +80,17 @@ public interface FaBoardingReservationDao {
             and USR_C.STATUS = 1
             and USR_DET_C.STATUS = 1
             and R_ST.STATUS = 1
-            and USR.USER_ID = 2;
+            and USR.USER_ID = #{ownerId};
             """)
     public List<OwnerReservations> showOwnerBookings(int ownerId);
+
+    /**
+     * Cancel reservation 
+     */
+    @Update("""
+        update FA_boarding_reservation
+            set cat_status = 6
+            where boarding_reservation_id = #{boardingReservationId};
+            """)
+    public void CancelReservation(Integer boardingReservationId);
 }

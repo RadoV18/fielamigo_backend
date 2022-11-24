@@ -1,22 +1,32 @@
 package com.fielamigo.app.FielAmigo.dto;
 
 public class CaregiverInfoDto {
+    private String imageUrl;
     private String caregiverName;
     private String ratingScale;
     private String comments;
     private String location;
-    private String BoardingReservationId;
+    private Integer boardingReservationId;
     
     public CaregiverInfoDto() {
     }
 
-    public CaregiverInfoDto(String caregiverName, String ratingScale, String comments, String location,
-            String boardingReservationId) {
+    public CaregiverInfoDto(String imageUrl, String caregiverName, String ratingScale, String comments, String location,
+    Integer boardingReservationId) {
+        this.imageUrl = imageUrl;
         this.caregiverName = caregiverName;
         this.ratingScale = ratingScale;
         this.comments = comments;
         this.location = location;
-        BoardingReservationId = boardingReservationId;
+        this.boardingReservationId = boardingReservationId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getCaregiverName() {
@@ -51,17 +61,18 @@ public class CaregiverInfoDto {
         this.location = location;
     }
 
-    public String getBoardingReservationId() {
-        return BoardingReservationId;
+    public Integer getBoardingReservationId() {
+        return boardingReservationId;
     }
 
-    public void setBoardingReservationId(String boardingReservationId) {
-        BoardingReservationId = boardingReservationId;
+    public void setBoardingReservationId(Integer boardingReservationId) {
+        this.boardingReservationId = boardingReservationId;
     }
 
     @Override
     public String toString() {
-        return "CaregiverInfoDto [caregiverName=" + caregiverName + ", ratingScale=" + ratingScale + ", comments="
-                + comments + ", location=" + location + ", BoardingReservationId=" + BoardingReservationId + "]";
+        return "CaregiverInfoDto [imageUrl=" + imageUrl + ", caregiverName=" + caregiverName + ", ratingScale="
+                + ratingScale + ", comments=" + comments + ", location=" + location + ", boardingReservationId="
+                + boardingReservationId + "]";
     }    
 }

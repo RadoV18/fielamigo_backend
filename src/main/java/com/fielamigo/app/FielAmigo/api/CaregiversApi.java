@@ -430,7 +430,7 @@ public class CaregiversApi {
      * @param headers the request headers.
      * @request caregiverId  
      * */ 
-    @GetMapping("/{caregiverId}/Info")
+    @GetMapping("/caregivers/{caregiverId}")
     public ResponseEntity<ResponseDto<CaregiverInfoDto>> getCaregiverInfo (
         @RequestHeader Map<String, String> headers,
         @PathVariable Integer caregiverId

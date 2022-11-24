@@ -71,4 +71,8 @@ public class BoardingReservationBl {
         });
         return result;
     }
+
+    public void cancelReservation(int reservationId) {
+        faBoardingReservationDao.CancelReservation(reservationId);
+    }
 }
