@@ -127,7 +127,7 @@ public interface FaBoardingReservationDao {
                 inner join fa_user fu on  fu.user_id  = d.user_id
                 inner join fa_user_address fua on fua.user_id  = fu.user_id 
                 inner join fa_boarding_service fbs on fbs.caregiver_id = 2
-                where r.boarding_reservation_id = 1;
+                where r.boarding_reservation_id = #{boardingReservationId};
             """)
     public ReservationInfoEntity showBookingInfo(int boardingReservationId);
 
@@ -185,6 +185,26 @@ public interface FaBoardingReservationDao {
             where boarding_reservation_id = #{boardingReservationId};
             """)
     public void CancelReservation(Integer boardingReservationId);
+
+    /**
+     * Complete reservation 
+     */
+    @Update("""
+        update FA_boarding_reservation
+            set cat_status = 347
+            where boarding_reservation_id = #{boardingReservationId};
+            """)
+    public void CompleteReservation(Integer boardingReservationId);
+
+    /**
+     * Accept reservation
+      */
+      @Update("""
+        update FA_boarding_reservation
+            set cat_status = 5
+            where boarding_reservation_id = #{boardingReservationId};
+            """)
+    public void AcceptReservation(Integer boardingReservationId);
 }
 
 
