@@ -91,7 +91,7 @@ public class UsersApi {
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
             // check if the token is valid
-            AuthUtil.verifyHasRole(jwt, "ADD_PAYMENT_METHOD");
+            AuthUtil.verifyHasRole(jwt, "UPDATE_PROFILE");
             // get the user id from the token
             int userId = JwtUtil.getUserIdFromToken(jwt);
 
@@ -129,7 +129,7 @@ public class UsersApi {
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
             // check if the token is valid
-            AuthUtil.verifyHasRole(jwt, "ADD_PAYMENT_METHOD");
+            AuthUtil.verifyHasRole(jwt, "GET_PROFILE");
             // get the user id from the token
             int userId = JwtUtil.getUserIdFromToken(jwt);
             System.out.println(userId);
@@ -172,7 +172,7 @@ public class UsersApi {
             // check if the user has a token
             String jwt = JwtUtil.getTokenFromHeader(headers);
             // check if the token is valid
-            AuthUtil.verifyHasRole(jwt, "ADD_PAYMENT_METHOD");
+            AuthUtil.verifyHasRole(jwt, "UPDATE_PROFILE");
             // get the user id from the token
             int userId = JwtUtil.getUserIdFromToken(jwt);
 
